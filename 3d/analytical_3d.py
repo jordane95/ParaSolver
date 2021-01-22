@@ -80,9 +80,9 @@ class AnalyticalSolver3D:
             p = 2*(np.cos(b*t)**2 + (tmp+4*self.w_z**2) * np.sin(b*t)**2 / (tmp-4*self.w_z**2))
             q = np.sqrt(4 * tmp * np.sin(b*t)**2 * (np.cos(b*t)**2 + self.w_z**2 * np.sin(b*t)**2 / b**2))/b
             print('p=', p, 'q=', q, 'p-q=', p-q)
-            ratio_xy = np.sqrt((p+q)/(p-q))
+            ratio_xy = np.sqrt((p+q)/np.abs(p-q))
             ratio_xz = np.sqrt(2*np.exp(3*(self.s_1+self.s_2)*t)/(p+q))
-            ratio_yz = np.sqrt(2*np.exp(3*(self.s_1+self.s_2)*t)/(p-q))
+            ratio_yz = np.sqrt(2*np.exp(3*(self.s_1+self.s_2)*t)/np.abs(p-q))
             list_ratio_xy.append(ratio_xy)
             list_ratio_xz.append(ratio_xz)
             list_ratio_yz.append(ratio_yz)
