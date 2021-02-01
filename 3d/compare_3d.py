@@ -21,12 +21,12 @@ class Comparator:
         plt.plot(self.list_time, list_ratio_xy_num, color='b', label='ratio_xy_num')
         plt.legend()
         plt.subplot(1, 3, 2)
-        plt.plot(self.list_time, list_ratio_yz_ana, color='r', label='ratio_yz_ana')
-        plt.plot(self.list_time, list_ratio_yz_num, color='b', label='ratio_yz_num')
+        plt.plot(self.list_time, np.log(list_ratio_yz_ana), color='r', label='ratio_yz_ana')
+        plt.plot(self.list_time, np.log(list_ratio_yz_num), color='b', label='ratio_yz_num')
         plt.legend()
         plt.subplot(1, 3, 3)
-        plt.plot(self.list_time, list_ratio_xz_ana, color='r', label='ratio_xz_ana')
-        plt.plot(self.list_time, list_ratio_xz_num, color='b', label='ratio_xz_num')
+        plt.plot(self.list_time, np.log(list_ratio_xz_ana), color='r', label='ratio_xz_ana')
+        plt.plot(self.list_time, np.log(list_ratio_xz_num), color='b', label='ratio_xz_num')
         plt.legend()
         plt.show()
         return None
@@ -43,6 +43,6 @@ class Comparator:
         return None
 
 
-compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
+compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 15, 15000))
 compartor.plot_compare_ratio()
 compartor.plot_compare_angle()

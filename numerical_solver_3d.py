@@ -15,6 +15,11 @@ class ParaSolver:
         self.list_ratios = None
         self.list_angles = None
 
+        self.list_S = None
+        self.list_eig_values_s = None
+        self.list_eig_vectors_s = None
+        self.list_inner_product = None
+
     def reset(self, list_A, list_time):
         self.list_A = list_A
         self.list_time = list_time
@@ -53,8 +58,11 @@ class ParaSolver:
         list_eig_vectors = []
         for F in self.list_F:
             (eig_value, eig_vector) = self.decompose(F)
-            list_eig_values.append(eig_value)
-            list_eig_vectors.append(eig_vector)
+            sorted_index = eig_value.argsort()
+            eig_value_sorted = np.array([eig_value[i] for i in sorted_index])
+            eig_vector_sorted = np.array([eig_vector[:,i] for i in sorted_index]).transpose()
+            list_eig_values.append(eig_value_sorted)
+            list_eig_vectors.append(eig_vector_sorted)
         self.list_eig_values = list_eig_values
         self.list_eig_vectors = list_eig_vectors
         return list_eig_values, list_eig_vectors
@@ -93,10 +101,12 @@ class ParaSolver:
         for eig_vectors in list_eig_vectors:
             # inner product -> matrix product
             angles = np.arccos(eig_vectors)
+
             for i in range(len(angles)):
                 for j in range(len(angles[i])):
                     if angles[i][j] > np.pi/2:
                         angles[i][j] -= np.pi
+
             list_angles.append(angles)
         self.list_angles = list_angles
         return list_angles
@@ -134,15 +144,67 @@ class ParaSolver:
         list_angles = self.list_angles
         list_angles = np.array(list_angles)
         list_time = self.list_time
+        # self.para_check()
         num = 0
         for i in range(3):
             for j in range(3):
                 num += 1
                 plt.subplot(3, 3, num)
-                plt.plot(list_time, list_angles[:, i, j], label='angle_')
+                plt.plot(list_time, list_angles[:, i, j], label='angle')
+                # print(len(list_angles[:, i, j]))
                 plt.legend()
                 plt.xlabel('t')
-                plt.ylabel('angle_')
+                plt.ylabel('angle')
+        plt.show()
+        return None
+
+    def para_check(self):
+        for item in self.list_angles:
+            print(item)
+
+    # colinearity
+    def calc_strain_tensor(self):
+        list_S = [(A+A.T)/2 for A in self.list_A]
+        self.list_S = list_S
+        return list_S
+
+    def calc_eig_strain(self):
+        self.list_eig_values_s = []
+        self.list_eig_vectors_s = []
+        for S in self.list_S:
+            (eig_value, eig_vector) = np.linalg.eig(S)
+            index_sorted = eig_value.argsort()
+            eig_value_sorted = np.array([eig_value[i] for i in index_sorted])
+            eig_vector_sorted = np.array([eig_vector[:, i] for i in index_sorted]).transpose()
+            self.list_eig_values_s.append(eig_value_sorted)
+            self.list_eig_vectors_s.append(eig_vector_sorted)
+        return self.list_eig_values_s, self.list_eig_vectors_s
+
+    def calc_coli(self):
+        list_eig_vectors_e = self.list_eig_vectors
+        list_eig_vectors_s = self.list_eig_vectors_s
+        list_inner_product = []
+        for (e, s) in zip(list_eig_vectors_e, list_eig_vectors_s):
+            inner_product = e.transpose()*s
+            list_inner_product.append(inner_product)
+        self.list_inner_product = list_inner_product
+        return list_inner_product
+
+    def plot_coli(self):
+        self.calc_strain_tensor()
+        self.calc_eig_strain()
+        self.calc_coli()
+        list_time = self.list_time
+        list_coli = self.list_inner_product
+        num = 0
+        for i in range(3):
+            for j in range(3):
+                num += 1
+                plt.subplot(3, 3, num)
+                plt.plot(list_time, [coli[i, j] for coli in list_coli], label='<e*s>')
+                plt.legend()
+                plt.xlabel('t')
+                plt.ylabel('<e*s>')
         plt.show()
         return None
 
@@ -155,11 +217,11 @@ def make_grad_tensor(s_1, s_2, w_z):
 
 
 A = make_grad_tensor(s_1=2, s_2=1, w_z=0.25)
-'''
-A = np.array([[1, 0, 1],
-              [0, 2, 0],
-              [0, 0, -3]])
-'''
+
+B = np.array([[2, -0.1, 0],
+              [0.1, 2, -0.1],
+              [0.1, 0, -4]])
+
 list_A = []
 for i in range(5000):
     list_A.append(A)
@@ -167,6 +229,7 @@ for i in range(5000):
 paraSolver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 5, 5000))
 paraSolver.plot_ratio()
 paraSolver.plot_angle()
+paraSolver.plot_coli()
 
 
 
