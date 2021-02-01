@@ -43,7 +43,7 @@ class AnalyticalSolver:
         list_angle = []
         for t in list_time:
             # ratio
-            gamma = (s**2+w**2)*t
+            gamma = 1+(s**2+w**2)*t**2
             ratio = gamma + np.sqrt(gamma**2 - 1) ######??????
             list_ratio.append(ratio)
             # angle

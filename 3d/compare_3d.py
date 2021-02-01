@@ -11,30 +11,32 @@ class Comparator:
         self.w_z = w_z
         self.list_time = list_time
 
-    def plot_compare_ratio(self):
+    def compare_ratio(self):
         anaSolver = ana.AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
         numSolver = num.NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        (list_ratio_xy_ana, list_ratio_yz_ana, list_ratio_xz_ana, list_angle_ana) = anaSolver.calc_para_ana()
-        (list_ratio_xy_num, list_ratio_yz_num, list_ratio_xz_num) = numSolver.calc_ratio()
+        (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
+        (list_ratio_xy_num, list_ratio_xz_num, list_ratio_yz_num) = numSolver.calc_ratio()
         plt.subplot(1, 3, 1)
         plt.plot(self.list_time, list_ratio_xy_ana, color='r', label='ratio_xy_ana')
         plt.plot(self.list_time, list_ratio_xy_num, color='b', label='ratio_xy_num')
         plt.legend()
         plt.subplot(1, 3, 2)
-        plt.plot(self.list_time, np.log(list_ratio_yz_ana), color='r', label='ratio_yz_ana')
-        plt.plot(self.list_time, np.log(list_ratio_yz_num), color='b', label='ratio_yz_num')
+        plt.plot(self.list_time, list_ratio_xz_ana, color='r', label='ratio_xz_ana')
+        plt.plot(self.list_time, list_ratio_xz_num, color='b', label='ratio_xz_num')
         plt.legend()
         plt.subplot(1, 3, 3)
-        plt.plot(self.list_time, np.log(list_ratio_xz_ana), color='r', label='ratio_xz_ana')
-        plt.plot(self.list_time, np.log(list_ratio_xz_num), color='b', label='ratio_xz_num')
+        plt.plot(self.list_time, list_ratio_yz_ana, color='r', label='ratio_yz_ana')
+        plt.plot(self.list_time, list_ratio_yz_num, color='b', label='ratio_yz_num')
         plt.legend()
+        plt.xlabel('t')
+        plt.ylabel('a_2/a_3')
         plt.show()
         return None
 
-    def plot_compare_angle(self):
+    def compare_angle(self):
         anaSolver = ana.AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
         numSolver = num.NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        (list_ratio_xy_ana, list_ratio_yz_ana, list_ratio_xz_ana, list_angle_ana) = anaSolver.calc_para_ana()
+        (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
         list_angle_num = numSolver.calc_angle()
         plt.plot(self.list_time, list_angle_ana, color='r', label='angle_ana')
         plt.plot(self.list_time, list_angle_num, color='b', label='angle_num')
@@ -43,6 +45,9 @@ class Comparator:
         return None
 
 
-compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 15, 15000))
-compartor.plot_compare_ratio()
-compartor.plot_compare_angle()
+'''
+At most 7s, otherwise, beyond the biggest number that the computer can represent.
+'''
+compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
+compartor.compare_ratio()
+compartor.compare_angle()

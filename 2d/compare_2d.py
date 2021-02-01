@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import numerical as num
-import analytical as ana
+import numerical_2d as num
+import analytical_2d as ana
 
 
 class AnaVsNum:
@@ -38,5 +38,5 @@ class AnaVsNum:
         return None
 
 
-comparator = AnaVsNum(s=1, w=0.5, beta=0, list_t=np.linspace(0, 5, 5000))
+comparator = AnaVsNum(s=0.5, w=1, beta=0, list_t=np.linspace(0, 5, 500))
 comparator.compare()

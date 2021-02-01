@@ -44,7 +44,7 @@ class NumericalSolver:
         for i in range(len(list_vectors)):
             rot_mat = list_vectors[i]
             angle = np.arccos(rot_mat[0][0]) # if the axis inverse, the angle too
-            if np.abs(angle)>np.pi/2:
+            if np.abs(angle) > np.pi/2:
                 angle = angle-np.pi
             list_angle.append(angle)
         return list_angle
@@ -53,9 +53,7 @@ class NumericalSolver:
         dim = 2
         delta_t = self.list_time[1]-self.list_time[0]
         steps = len(self.list_time)
-        list_A = []
-        for i in range(steps):
-            list_A.append(self.A)
+        list_A = [self.A for i in range(steps)]
         # calculate tensor of deformation at each time
         trans = np.eye(dim)
         list_F = [trans]
