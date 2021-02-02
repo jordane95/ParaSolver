@@ -3,17 +3,6 @@ import numpy as np
 from numerical_solver_3d import ParaSolver
 
 
-class ParaSol4Vis(ParaSolver):
-    def __init__(self, list_A, list_time):
-        super().__init__(list_A, list_time)
-        self.list_length = None
-
-    def calc_length(self):
-        self.calc_eig_para()
-        self.list_length = np.sqrt(1/np.array(self.list_eig_values))
-        return self.list_length
-
-
 def plot_ellipse_3d(lengths, trans_mat, ax):
     (a, b, c) = tuple(lengths)
     theta = np.linspace(0, np.pi, 100)
@@ -33,12 +22,13 @@ def plot_ellipse_3d(lengths, trans_mat, ax):
 
 
 def simulation_3d(list_length, list_vectors):
+    print("Plotting...")
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     plt.ion()
     for (lengths, trans_mat) in zip(list_length, list_vectors):
         plot_ellipse_3d(lengths, trans_mat, ax)
-    print("Finished")
+    print("Finished!")
     plt.ioff()
     plt.show()
 
@@ -58,10 +48,10 @@ B = make_grad_tensor(s_1=2, s_2=1, w_z=0.75)
 list_A = [A for t in range(100)]
 
 # data processing
-solver = ParaSol4Vis(list_A=list_A, list_time=np.linspace(0, 1, 100))
+solver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 1, 100))
 list_eig_values, list_eig_vectors = solver.calc_eig_para()
 list_length = np.sqrt(1/np.array(list_eig_values))
-print("Calculation Done")
+print("Calculation Done!")
 
 # animation
 simulation_3d(list_length, list_eig_vectors)
