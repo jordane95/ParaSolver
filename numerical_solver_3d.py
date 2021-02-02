@@ -204,20 +204,20 @@ def make_grad_tensor(s_1, s_2, w_z):
                   [0, 0, -(s_1+s_2)]])
     return A
 
+def test():
+    A = make_grad_tensor(s_1=2, s_2=1, w_z=0.25)
 
-A = make_grad_tensor(s_1=2, s_2=1, w_z=0.25)
+    A = np.array([[1, -0.1, 5],
+                  [0, 2, 0],
+                  [0, 0, -3]])
 
-B = np.array([[1, -0.1, 5],
-              [0, 2, 0],
-              [0, 0, -3]])
+    list_A = []
+    steps = 5000
+    for i in range(steps):
+        list_A.append(A)
 
-list_A = []
-steps = 5000
-for i in range(steps):
-    list_A.append(B)
-
-paraSolver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 5, steps))
-paraSolver.calc_geo_para(sort=True, abs=True)
-paraSolver.plot_ratio()
-paraSolver.plot_angle()
-paraSolver.plot_coli(abs=True)
+    paraSolver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 5, steps))
+    paraSolver.calc_geo_para(sort=True, abs=True)
+    paraSolver.plot_ratio()
+    paraSolver.plot_angle()
+    paraSolver.plot_coli(abs=True)
