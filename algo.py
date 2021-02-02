@@ -1,5 +1,21 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
+
+def plot_ellipse_2d(a, b, angle):
+    t = np.linspace(0, 2 * np.pi, 1000)
+    list_x = a * np.cos(t)
+    list_y = b * np.sin(t)
+    cor_old = [[x, y] for (x, y) in zip(list_x, list_y)]
+    rot = np.array([[np.cos(angle), np.sin(angle)],
+                    [-np.sin(angle), np.cos(angle)]])
+    list_cor_new = np.array([np.dot(rot, cor) for cor in cor_old])
+
+    plt.cla()
+    plt.plot(list_cor_new[:, 0], list_cor_new[:, 1])
+    plt.xlim(-5, 5)
+    plt.ylim(-5, 5)
+    plt.pause(0.01)
 
 # numerical solution
 def calc_trans_mat(A, delta_t, F_prec, dim):

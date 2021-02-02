@@ -32,17 +32,12 @@ class NumericalSolver:
     # calculate the ratio and angle for two dimensional flow
     # from the eig values and eig vectors
     def calc_ratio(self, list_value):
-        list_ratio = []
-        for i in range(len(list_value)):
-            length_axe = list_value[i]
-            ratio = np.sqrt(length_axe.max() / length_axe.min())  # there is a inversion of the two axe ?
-            list_ratio.append(ratio)
+        list_ratio = [np.sqrt(eig_values.max()/eig_values.min()) for eig_values in list_value]
         return list_ratio
 
     def calc_angle(self, list_vectors):
         list_angle = []
-        for i in range(len(list_vectors)):
-            rot_mat = list_vectors[i]
+        for rot_mat in list_vectors:
             angle = np.arccos(rot_mat[0][0]) # if the axis inverse, the angle too
             if np.abs(angle) > np.pi/2:
                 angle = angle-np.pi
