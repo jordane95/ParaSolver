@@ -204,6 +204,7 @@ def make_grad_tensor(s_1, s_2, w_z):
                   [0, 0, -(s_1+s_2)]])
     return A
 
+
 def test():
     A = make_grad_tensor(s_1=2, s_2=1, w_z=0.25)
 
