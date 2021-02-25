@@ -14,11 +14,14 @@ def plot_ellipse_3d(lengths, trans_mat, ax):
     list_cor_new = np.array([np.dot(trans_mat, cor) for cor in list_cor_old])
     plt.cla()
     ax.plot_surface(list_cor_new[:, 0], list_cor_new[:, 1], list_cor_new[:, 2], color='b')
-    ax.set_xlim(-5, 5)
-    ax.set_ylim(-5, 5)
-    ax.set_zlim(-5, 5)
+    ax.set_xlim(-2, 2)
+    ax.set_ylim(-2, 2)
+    ax.set_zlim(-2, 2)
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
 
-    plt.pause(0.01)
+    plt.pause(0.05)
 
 
 def simulation_3d(list_length, list_vectors):
@@ -70,7 +73,7 @@ def make_grad_tensor_2d(s, w, beta):
 
 def result():
     A = make_grad_tensor_2d(s=.5, w=1, beta=0)
-    list_time = np.linspace(0, 5, 500)
+    list_time = np.linspace(0, 5, 200)
     list_A = [A for t in list_time]
 
     # data processing
