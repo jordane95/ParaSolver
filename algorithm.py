@@ -51,10 +51,15 @@ def para_solver(list_A, delta_t, dim):
     return list_value, list_vector
 
 
-A = np.array([[1, 0, 1],
-              [0, 2, 0],
-              [0, 0, -3]])
+def test():
+    A = np.array([[1, 0, 1],
+                  [0, 2, 0],
+                  [0, 0, -3]])
 
-list_value, list_vector = para_solver(list_A=[A, A, A], delta_t=0.01, dim=3)
-print(list_value)
-print(list_vector)
+    list_value, list_vector = para_solver(list_A=[A, A, A], delta_t=0.01, dim=3)
+    print(list_value)
+    print(list_vector)
+
+
+if __name__ == '__main__':
+    test()

@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from numerical_3d import NumericalSolver3D
+from case_3d.numerical_3d import NumericalSolver3D
 
 
 class NumSol3D4Vis(NumericalSolver3D):
@@ -35,7 +35,7 @@ def plot_ellipse_3d_psedo_2d(a, b, c, angle, ax):
 
 def simulation_3d(list_length, list_angles):
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection='case_3d')
     plt.ion()
     for (length, angle) in zip(list_length, list_angles):
         (a, b, c) = tuple(length)
@@ -45,10 +45,15 @@ def simulation_3d(list_length, list_angles):
     plt.show()
 
 
-# get data
-solver = NumSol3D4Vis(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 1, 100))
-list_length = solver.calc_length()
-list_angle = solver.calc_angle()
-print("Calculation Done")
-# plot
-simulation_3d(list_length, list_angle)
+def test():
+    # get data
+    solver = NumSol3D4Vis(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 1, 100))
+    list_length = solver.calc_length()
+    list_angle = solver.calc_angle()
+    print("Calculation Done")
+    # plot
+    simulation_3d(list_length, list_angle)
+
+
+if __name__ == '__main__':
+    test()

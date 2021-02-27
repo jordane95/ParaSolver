@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
 import numpy as np
-from numerical_2d import NumericalSolver
+from case_2d.numerical_2d import NumericalSolver
 
 
 # numerical solution of two-dimensional time-independent flow
@@ -75,13 +75,18 @@ def simulation_2d_fill(list_length, list_angle):
     plt.show()
 
 
-# get data
-numSolver = NumSol4Vis(s=0.5, w=1, beta=0, list_time=np.linspace(0, 5, 500))
-list_length, list_angle = numSolver.calc_para_num()
+def test():
+    # get data
+    numSolver = NumSol4Vis(s=0.5, w=1, beta=0, list_time=np.linspace(0, 5, 500))
+    list_length, list_angle = numSolver.calc_para_num()
 
-# plot
-fill = True
-if fill:
-    simulation_2d_fill(list_length, list_angle)
-else:
-    simulation_2d(list_length, list_angle)
+    # plot
+    fill = True
+    if fill:
+        simulation_2d_fill(list_length, list_angle)
+    else:
+        simulation_2d(list_length, list_angle)
+
+
+if __name__ == '__main__':
+    test()

@@ -222,3 +222,7 @@ def test():
     paraSolver.plot_ratio()
     paraSolver.plot_angle()
     paraSolver.plot_coli(abs=True)
+
+
+if __name__ == '__main__':
+    test()

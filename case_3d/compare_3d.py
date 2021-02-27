@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import numerical_3d as num
-import analytical_3d as ana
+from case_3d.numerical_3d import NumericalSolver3D
+from case_3d.analytical_3d import AnalyticalSolver3D
 
 
 class Comparator:
@@ -12,8 +12,8 @@ class Comparator:
         self.list_time = list_time
 
     def compare_ratio(self):
-        anaSolver = ana.AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        numSolver = num.NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        anaSolver = AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        numSolver = NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
         (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
         (list_ratio_xy_num, list_ratio_xz_num, list_ratio_yz_num) = numSolver.calc_ratio()
         plt.subplot(1, 3, 1)
@@ -34,8 +34,8 @@ class Comparator:
         return None
 
     def compare_angle(self):
-        anaSolver = ana.AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        numSolver = num.NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        anaSolver = AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        numSolver = NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
         (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
         list_angle_num = numSolver.calc_angle()
         plt.plot(self.list_time, list_angle_ana, color='r', label='angle_ana')
@@ -45,9 +45,12 @@ class Comparator:
         return None
 
 
-'''
-At most 7s, otherwise, beyond the biggest number that the computer can represent.
-'''
-compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
-compartor.compare_ratio()
-compartor.compare_angle()
+def test():
+    # At most 7s, otherwise, beyond the biggest number that the computer can represent.
+    compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
+    compartor.compare_ratio()
+    compartor.compare_angle()
+
+
+if __name__ == '__main__':
+    test()

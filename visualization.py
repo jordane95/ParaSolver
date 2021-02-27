@@ -27,7 +27,7 @@ def plot_ellipse_3d(lengths, trans_mat, ax):
 def simulation_3d(list_length, list_vectors):
     print("Plotting...")
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection='case_3d')
     plt.ion()
     for (lengths, trans_mat) in zip(list_length, list_vectors):
         plot_ellipse_3d(lengths, trans_mat, ax)
@@ -86,4 +86,5 @@ def result():
     simulation_3d(list_length, list_eig_vectors)
 
 
-result()
+if __name__ == '__main__':
+    result()

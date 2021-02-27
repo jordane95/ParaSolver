@@ -33,7 +33,7 @@ def plot_ellipse_3d_psedo_2d(a, b, c, angle):
     list_cor_xy_new = np.array([np.dot(rot, cor) for cor in list_cor_xy])
 
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection='case_3d')
     ax.plot_surface(list_cor_xy_new[:, 0], list_cor_xy_new[:, 1], list_z)
     plt.show()
 

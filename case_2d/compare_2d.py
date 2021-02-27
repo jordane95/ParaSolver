@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import numerical_2d as num
-import analytical_2d as ana
+from case_2d.numerical_2d import NumericalSolver
+from case_2d.analytical_2d import AnalyticalSolver
 
 
 class AnaVsNum:
@@ -13,8 +13,8 @@ class AnaVsNum:
 
     def compare(self):
         list_time = self.list_t
-        ana_solver = ana.AnalyticalSolver(self.s, self.w, self.beta, self.list_t)
-        num_solver = num.NumericalSolver(self.s, self.w, self.beta, self.list_t)
+        ana_solver = AnalyticalSolver(self.s, self.w, self.beta, self.list_t)
+        num_solver = NumericalSolver(self.s, self.w, self.beta, self.list_t)
         (list_ratio_ana, list_angle_ana) = ana_solver.calc_para_ana()
         (list_ratio_num, list_angle_num) = num_solver.calc_para_num()
         # compare ratio
@@ -38,5 +38,10 @@ class AnaVsNum:
         return None
 
 
-comparator = AnaVsNum(s=1, w=1, beta=0, list_t=np.linspace(0, 5, 500))
-comparator.compare()
+def test():
+    comparator = AnaVsNum(s=1, w=1, beta=0, list_t=np.linspace(0, 5, 500))
+    comparator.compare()
+
+
+if __name__ == '__main__':
+    test()

@@ -115,10 +115,13 @@ class NumericalSolver3D:
         return None
 
 
-'''
-numSolver3 = NumericalSolver3D(s_1=2, s_2=1, w_z=0.1, list_time=np.linspace(0, 6, 6000))
-(eig_values, eig_vectors) = numSolver3.calc_eig_para()
-for i in range(len(eig_values)):
-    print(eig_values[i])
-numSolver3.plot_ratio()
-'''
+def test():
+    numSolver3 = NumericalSolver3D(s_1=2, s_2=1, w_z=0.1, list_time=np.linspace(0, 6, 6000))
+    (eig_values, eig_vectors) = numSolver3.calc_eig_para()
+    for i in range(len(eig_values)):
+        print(eig_values[i])
+    numSolver3.plot_ratio()
+
+
+if __name__ == '__main__':
+    test()

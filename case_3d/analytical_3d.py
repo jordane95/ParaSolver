@@ -119,7 +119,10 @@ class AnalyticalSolver3D:
         return None
 
 
-'''
-anaSolver3 = AnalyticalSolver3D(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
-anaSolver3.plot_ratio()
-'''
+def test():
+    anaSolver3 = AnalyticalSolver3D(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
+    anaSolver3.plot_ratio()
+
+
+if __name__ == '__main__':
+    test()
