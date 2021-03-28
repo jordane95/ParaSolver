@@ -1,9 +1,20 @@
-# particle-deformation
+# Particle Deformation
 Numerical simulation of fluid particle deformation in the flow field
 
 We will explore the deformation of fluid particle in some flow, such as canal, 
 pipe flow(tube rond, tube squre, tube L). And give the statistic law of deformation 
 in these situations.
+
+# Functions
+
+* ParaSolver
+
+## To do list
+
+* Rewrite numerical_3d.py as a subclass of ParaSolver
+* Rewrite numerical_2d.py as a subclass of ParaSolver
+* Change some access of methods of ParaSolver
+* Perform experiment in some flow
 
 ## Reference
 
