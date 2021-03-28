@@ -9,9 +9,6 @@ class ParaSolver:
         self.list_F = None
         self.list_eig_values = None
         self.list_eig_vectors = None
-        # self.list_ratio_xy = None
-        # self.list_ratio_yz = None
-        # self.list_ratio_xz = None
         self.list_ratios = None
         self.list_angles = None
 
@@ -58,6 +55,9 @@ class ParaSolver:
         list_eig_vectors = []
         for F in self.list_F:
             (eig_value, eig_vector) = self.decompose(F)
+            for i, a in enumerate(eig_value):
+                if type(a) == complex:
+                    eig_value[i] = a.__abs__()
             if sort:
                 sorted_index = eig_value.argsort()
                 eig_value = np.array([eig_value[idx] for idx in sorted_index])
@@ -69,25 +69,17 @@ class ParaSolver:
         return list_eig_values, list_eig_vectors
 
     def calc_ratio(self):
+        eps = 1e-7
         # calculate the ratios out of from the eig values
         list_eig_values = self.list_eig_values
         # ratio
-        list_ratio_xy = []
-        list_ratio_yz = []
-        list_ratio_xz = []
         list_ratios = []
         for eig_values in list_eig_values:
-            ratio_xy = np.sqrt(eig_values[1]/eig_values[0])
-            ratio_yz = np.sqrt(eig_values[2]/eig_values[1])
-            ratio_xz = np.sqrt(eig_values[2]/eig_values[0])
-            # list_ratio_xy.append(ratio_xy)
-            # list_ratio_yz.append(ratio_yz)
-            # list_ratio_xz.append(ratio_xz)
+            ratio_xy = np.sqrt(eig_values[1]/(eig_values[0]+eps))
+            ratio_yz = np.sqrt(eig_values[2]/(eig_values[1]+eps))
+            ratio_xz = np.sqrt(eig_values[2]/(eig_values[0]+eps))
             ratios = [ratio_xy, ratio_yz, ratio_xz]
             list_ratios.append(ratios)
-        # self.list_ratio_xy = list_ratio_xy
-        # self.list_ratio_yz = list_ratio_yz
-        # self.list_ratio_xz = list_ratio_xz
         self.list_ratios = list_ratios
         return list_ratios
 
@@ -113,9 +105,14 @@ class ParaSolver:
         self.calc_angle(abs)
         return None
 
-    def plot_ratio(self):
+    def plot_ratio(self, max_time=None, log=False):
         list_ratios = np.array(self.list_ratios)
         list_time = self.list_time
+        if max_time:
+            list_time = [time for time in self.list_time if time < max_time]
+            list_ratios = list_ratios[:len(list_time), :]
+        if log == True:
+            list_ratios = np.log(list_ratios)
         plt.subplot(1, 3, 1)
         plt.plot(list_time, list_ratios[:, 0], label='a_1/a_2')
         plt.xlabel('t')
@@ -152,7 +149,7 @@ class ParaSolver:
         plt.show()
         return None
 
-    # collinearity
+    # colinearity
     def calc_strain_tensor(self):
         list_S = [(A+A.T)/2 for A in self.list_A]
         self.list_S = list_S
@@ -198,6 +195,51 @@ class ParaSolver:
         return None
 
 
+    # calculate rot omega
+    def calc_omega(self):
+        list_W = [(A-A.T)/2 for A in self.list_A]
+        return None
+
+    # for test
+    def plot_ratio_angle(self):
+        # angle
+        list_angles = self.list_angles
+        list_angles = np.array(list_angles)
+        list_time = self.list_time
+        # self.para_check()
+        num = 0
+        for i in range(3):
+            for j in range(3):
+                num += 1
+                plt.subplot(4, 3, num)
+                plt.plot(list_time, list_angles[:, i, j], label='angle(e_' + str(j + 1) + ', x_' + str(i + 1) + ')')
+                # print(len(list_angles[:, i, j]))
+                plt.legend()
+                plt.xlabel('t')
+                plt.ylabel('theta')
+
+        # ratio
+        list_ratios = np.array(self.list_ratios)
+        list_time = self.list_time
+        plt.subplot(4, 3, 10)
+        plt.plot(list_time, list_ratios[:, 0], label='a_1/a_2')
+        plt.xlabel('t')
+        plt.ylabel('ratio_xy')
+        plt.legend()
+        plt.subplot(4, 3, 11)
+        plt.plot(list_time, list_ratios[:, 2], label='a_1/a_3')
+        plt.xlabel('t')
+        plt.ylabel('ratio_xz')
+        plt.legend()
+        plt.subplot(4, 3, 12)
+        plt.plot(list_time, list_ratios[:, 1], label='a_2/a_3')
+        plt.xlabel('t')
+        plt.ylabel('ratio_yz')
+        plt.legend()
+
+        plt.show()
+
+
 def make_grad_tensor(s_1, s_2, w_z):
     A = np.array([[s_1, -w_z, 0],
                   [w_z, s_2, 0],
@@ -211,12 +253,8 @@ def test():
     A = np.array([[1, -0.1, 5],
                   [0, 2, 0],
                   [0, 0, -3]])
-
-    list_A = []
     steps = 5000
-    for i in range(steps):
-        list_A.append(A)
-
+    list_A = [A for _ in range(steps)]
     paraSolver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 5, steps))
     paraSolver.calc_geo_para(sort=True, abs=True)
     paraSolver.plot_ratio()

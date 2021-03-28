@@ -61,7 +61,7 @@ def simulation_2d(list_length, list_angle):
 def simulation_2d_fill(list_length, list_angle):
     fig = plt.figure()
     plt.ion()
-    ax = fig.add_subplot(111, aspect='equal')
+    ax = fig.add_subplot(1, 1, 1, aspect='equal')
     for length, angle in zip(list_length, list_angle):
         plt.cla()
         e = Ellipse(xy=(0, 0), width=length[0]*2, height=length[1]*2, angle=angle*180/np.pi)

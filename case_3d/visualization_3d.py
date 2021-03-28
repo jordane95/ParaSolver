@@ -35,7 +35,7 @@ def plot_ellipse_3d_psedo_2d(a, b, c, angle, ax):
 
 def simulation_3d(list_length, list_angles):
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='case_3d')
+    ax = fig.add_subplot(1, 1, 1, projection='3d')
     plt.ion()
     for (length, angle) in zip(list_length, list_angles):
         (a, b, c) = tuple(length)
