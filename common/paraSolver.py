@@ -200,45 +200,6 @@ class ParaSolver:
         list_W = [(A-A.T)/2 for A in self.list_A]
         return None
 
-    # for test
-    def plot_ratio_angle(self):
-        # angle
-        list_angles = self.list_angles
-        list_angles = np.array(list_angles)
-        list_time = self.list_time
-        # self.para_check()
-        num = 0
-        for i in range(3):
-            for j in range(3):
-                num += 1
-                plt.subplot(4, 3, num)
-                plt.plot(list_time, list_angles[:, i, j], label='angle(e_' + str(j + 1) + ', x_' + str(i + 1) + ')')
-                # print(len(list_angles[:, i, j]))
-                plt.legend()
-                plt.xlabel('t')
-                plt.ylabel('theta')
-
-        # ratio
-        list_ratios = np.array(self.list_ratios)
-        list_time = self.list_time
-        plt.subplot(4, 3, 10)
-        plt.plot(list_time, list_ratios[:, 0], label='a_1/a_2')
-        plt.xlabel('t')
-        plt.ylabel('ratio_xy')
-        plt.legend()
-        plt.subplot(4, 3, 11)
-        plt.plot(list_time, list_ratios[:, 2], label='a_1/a_3')
-        plt.xlabel('t')
-        plt.ylabel('ratio_xz')
-        plt.legend()
-        plt.subplot(4, 3, 12)
-        plt.plot(list_time, list_ratios[:, 1], label='a_2/a_3')
-        plt.xlabel('t')
-        plt.ylabel('ratio_yz')
-        plt.legend()
-
-        plt.show()
-
 
 def make_grad_tensor(s_1, s_2, w_z):
     A = np.array([[s_1, -w_z, 0],
