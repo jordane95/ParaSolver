@@ -1,10 +1,10 @@
 import numpy as np
-from common.file_io import read_grad_data
+from common.file_io import read_grad
 from common.paraSolver import ParaSolver
 from common.visualization import simulation_3d
 
 path = 'gradU-0.001.txt'
-deltaT, list_A = read_grad_data(path)
+deltaT, list_A = read_grad(path)
 list_time = [deltaT*i for i in range(len(list_A))]
 solver = ParaSolver(list_A, list_time)
 

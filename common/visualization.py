@@ -40,7 +40,7 @@ def simulation_3d(list_length, list_vectors):
 
 
 # plot the trajectory of a particle
-def plot_trajectory(list_position):
+def plot_position(list_position):
     print("Plotting trajectoiry...")
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -51,57 +51,16 @@ def plot_trajectory(list_position):
     plt.show()
 
 
-
-
-
-###
-###
-###
-
 # the following code is to test the previous functions
-
-from common.paraSolver import ParaSolver
-def make_grad_tensor(s_1, s_2, w_z):
-    A = np.array([[s_1, -w_z, 0],
-                  [w_z, s_2, 0],
-                  [0, 0, -(s_1+s_2)]])
-    return A
-
-
-def test_3d():
-    # initialization
-    A = np.array([[1, -0.1, 5],
-                  [0, 2, 0],
-                  [0, 0, -3]])
-    B = make_grad_tensor(s_1=2, s_2=1, w_z=0.75)
-    list_A = [B for t in range(100)]
-
-    # data processing
-    solver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 1, 100))
-    list_eig_values, list_eig_vectors = solver.calc_eig_para()
-    list_length = np.sqrt(1/np.array(list_eig_values))
-    print("Calculation Done!")
-
-    # animation
-    simulation_3d(list_length, list_eig_vectors)
-
-
-def make_grad_tensor_2d(s, w, beta):
-    sym = np.array([[s*np.cos(2*beta), s*np.sin(2*beta), 0],
-                    [s*np.sin(2*beta), -s*np.cos(2*beta), 0],
-                    [0, 0, 0]])
-    anti_sym = np.array([[0, -w, 0],
-                         [w, 0, 0],
-                         [0, 0, 0]])
-    return sym + anti_sym
-
-
-def test_2d():
-    A = make_grad_tensor_2d(s=.5, w=1, beta=0)
+def test_simulation():
+    from case_2d.numerical_2d import NumericalSolver2D
+    temp = NumericalSolver2D.make_grad_tensor(s=.5, w=1, beta=0)
+    A = np.zeros((3, 3))
+    A[:2, :2] = temp
     list_time = np.linspace(0, 5, 200)
-    list_A = [A for t in list_time]
+    list_A = [A for _ in list_time]
 
-    # data processing
+    from common.paraSolver import ParaSolver
     solver = ParaSolver(list_A=list_A, list_time=list_time)
     list_eig_values, list_eig_vectors = solver.calc_eig_para()
     list_length = np.sqrt(1 / np.array(list_eig_values))
@@ -115,8 +74,8 @@ def test_position():
     from common.file_io import read_position
     filename = 'Utr.txt'
     delta, list_position, list_velocity = read_position(filename)
-    plot_trajectory(np.array(list_position))
+    plot_position(np.array(list_position))
 
 
 if __name__ == '__main__':
-    test_position()
+    test_simulation()

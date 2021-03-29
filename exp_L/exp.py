@@ -1,12 +1,12 @@
 import numpy as np
-from common.file_io import read_grad_data, read_position
+from common.file_io import read_grad, read_position
 from common.paraSolver import ParaSolver
-from common.visualization import simulation_3d, plot_trajectory
+from common.visualization import simulation_3d, plot_position
 
 
 # solve deformation of particle in the flow
 path = 'gradU.txt'
-deltaT, list_A = read_grad_data(path)
+deltaT, list_A = read_grad(path)
 list_time = [deltaT*i for i in range(len(list_A))]
 solver = ParaSolver(list_A, list_time)
 
@@ -20,8 +20,8 @@ def visualization(solver):
 
 def data(solver):
     # data for analyse
-    solver.calc_geo_para(sort=True, abs=True)
-    solver.plot_ratio(max_time=1.3, log=True)
+    solver.calc_geo_para(sort=True, normalize=True)
+    solver.plot_ratio(log=True)
     solver.plot_angle()
     solver.plot_coli(abs=True)
 

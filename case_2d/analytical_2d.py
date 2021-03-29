@@ -3,21 +3,19 @@ import matplotlib.pyplot as plt
 
 
 # analytical solution of two-dimensional time-independent flow
-class AnalyticalSolver:
+class AnalyticalSolver2D:
     def __init__(self, s, w, beta, list_time):
         self.s = s
         self.w = w
         self.beta = beta
-        self.list_time = list_time
-        self.list_ratio_ana = None
-        self.list_angle_ana = None
 
-    # when s^2 > w^2
-    def s_sup_w(self):
-        list_time = self.list_time
-        s = self.s
-        w = self.w
-        beta = self.beta
+        self.list_time = list_time
+
+        self.list_ratio = None
+        self.list_angle = None
+
+    @staticmethod
+    def s_sup_w(s, w, beta, list_time):
         tmp = np.sqrt(s ** 2 - w ** 2)
         list_ratio = []
         list_angle = []
@@ -33,18 +31,14 @@ class AnalyticalSolver:
             list_angle.append(theta)
         return list_ratio, list_angle
 
-    # when s^2 = w^2
-    def s_equ_w(self):
-        list_time = self.list_time
-        s = self.s
-        w = self.w
-        beta = self.beta
+    @staticmethod
+    def s_equ_w(s, w, beta, list_time):
         list_ratio = []
         list_angle = []
         for t in list_time:
             # ratio
             gamma = 1+(s**2+w**2)*t**2
-            ratio = gamma + np.sqrt(gamma**2 - 1) ######??????
+            ratio = gamma + np.sqrt(gamma**2 - 1)
             list_ratio.append(ratio)
             # angle
             top = -w*np.cos(2*beta)*t+np.sin(2*beta)
@@ -53,12 +47,8 @@ class AnalyticalSolver:
             list_angle.append(theta)
         return list_ratio, list_angle
 
-    # when s^2 < w^2
-    def s_inf_w(self):
-        list_time = self.list_time
-        s = self.s
-        w = self.w
-        beta = self.beta
+    @staticmethod
+    def s_inf_w(s, w, beta, list_time):
         tmp = np.sqrt(w**2 - s**2)
         list_ratio = []
         list_angle = []
@@ -74,27 +64,11 @@ class AnalyticalSolver:
             list_angle.append(theta)
         return list_ratio, list_angle
 
-    def calc_para_ana(self):
+    def calc_geo_para(self):
         if self.s**2 > self.w**2:
-            (list_ratio, list_angle) = self.s_sup_w()
+            self.list_ratio, self.list_angle = self.s_sup_w(self.s, self.w, self.beta, self.list_time)
         elif self.s**2 == self.w**2:
-            (list_ratio, list_angle) = self.s_equ_w()
+            self.list_ratio, self.list_angle = self.s_equ_w(self.s, self.w, self.beta, self.list_time)
         else:
-            (list_ratio, list_angle) = self.s_inf_w()
-        self.list_ratio_ana = list_ratio
-        self.list_angle_ana = list_angle
-        return list_ratio, list_angle
-
-    def plot_ratio_ana(self):
-        plt.plot(self.list_time, self.list_ratio_ana, label='ratio')
-        plt.legend()
-        plt.xlabel('time')
-        plt.ylabel('a2/a1')
-        plt.show()
-
-    def plot_angle_ana(self):
-        plt.plot(self.list_time, self.list_angle_ana, label='angle')
-        plt.legend()
-        plt.xlabel('time')
-        plt.ylabel('angle')
-        plt.show()
+            self.list_ratio, self.list_angle = self.s_inf_w(self.s, self.w, self.beta, self.list_time)
+        return self.list_ratio, self.list_angle

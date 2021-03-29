@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from case_2d.numerical_2d import NumericalSolver
-from case_2d.analytical_2d import AnalyticalSolver
+from case_2d.numerical_2d import NumericalSolver2D
+from case_2d.analytical_2d import AnalyticalSolver2D
 
 
 class AnaVsNum:
@@ -13,10 +13,10 @@ class AnaVsNum:
 
     def compare(self):
         list_time = self.list_t
-        ana_solver = AnalyticalSolver(self.s, self.w, self.beta, self.list_t)
-        num_solver = NumericalSolver(self.s, self.w, self.beta, self.list_t)
-        (list_ratio_ana, list_angle_ana) = ana_solver.calc_para_ana()
-        (list_ratio_num, list_angle_num) = num_solver.calc_para_num()
+        ana_solver = AnalyticalSolver2D(self.s, self.w, self.beta, self.list_t)
+        num_solver = NumericalSolver2D(self.s, self.w, self.beta, self.list_t)
+        list_ratio_ana, list_angle_ana = ana_solver.calc_geo_para()
+        list_ratio_num, list_angle_num = num_solver.calc_geo_para()
         # compare ratio
         plt.subplot(1, 2, 1)
         plt.plot(list_time, list_ratio_num, color='b', label='ratio_num')

@@ -11,41 +11,32 @@ class Comparator:
         self.w_z = w_z
         self.list_time = list_time
 
-    def compare_ratio(self):
-        anaSolver = AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        numSolver = NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
-        (list_ratio_xy_num, list_ratio_xz_num, list_ratio_yz_num) = numSolver.calc_ratio()
-        plt.subplot(1, 3, 1)
-        plt.plot(self.list_time, list_ratio_xy_ana, color='r', label='ratio_xy_ana')
-        plt.plot(self.list_time, list_ratio_xy_num, color='b', label='ratio_xy_num')
-        plt.legend()
-        plt.xlabel('t')
-        plt.ylabel('a_1/a_2')
-        plt.subplot(1, 3, 2)
-        plt.plot(self.list_time, list_ratio_xz_ana, color='r', label='ratio_xz_ana')
-        plt.plot(self.list_time, list_ratio_xz_num, color='b', label='ratio_xz_num')
-        plt.legend()
-        plt.xlabel('t')
-        plt.ylabel('a_1/a_3')
-        plt.subplot(1, 3, 3)
-        plt.plot(self.list_time, list_ratio_yz_ana, color='r', label='ratio_yz_ana')
-        plt.plot(self.list_time, list_ratio_yz_num, color='b', label='ratio_yz_num')
-        plt.legend()
-        plt.xlabel('t')
-        plt.ylabel('a_2/a_3')
+        self.anaSolver = AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        self.numSolver = NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
+        self.list_ratios_ana, self.list_angle_ana = self.anaSolver.calc_geo_para()
+        self.list_ratios_num, self.list_angles_num = self.numSolver.calc_geo_para()
+
+    def compare_ratio(self, dim=3):
+        self.list_ratios_ana = np.array(self.list_ratios_ana)
+        self.list_ratios_num = np.array(self.list_ratios_num)
+        for i in range(dim):
+            plt.subplot(1, 3, i+1)
+            plt.plot(self.list_time, self.list_ratios_ana[:, i], color='r', label='ratio_ana')
+            plt.plot(self.list_time, self.list_ratios_num[:, i], color='b', label='ratio_num')
+            plt.legend()
+            plt.xlabel('t')
+            plt.ylabel('ratio')
         plt.show()
         return None
 
     def compare_angle(self):
-        anaSolver = AnalyticalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        numSolver = NumericalSolver3D(self.s_1, self.s_2, self.w_z, self.list_time)
-        (list_ratio_xy_ana, list_ratio_xz_ana, list_ratio_yz_ana, list_angle_ana) = anaSolver.calc_para_ana()
-        list_angle_num = numSolver.calc_angle()
-        plt.plot(self.list_time, list_angle_ana, color='r', label='angle_ana')
-        plt.plot(self.list_time, list_angle_num, color='b', label='angle_num')
+        self.list_angle_ana = np.array(self.list_angle_ana)
+        self.list_angles_num = np.array(self.list_angles_num)
+        plt.plot(self.list_time, self.list_angle_ana, color='r', label='angle_ana')
+        plt.plot(self.list_time, self.list_angles_num[:, 0, 0], color='b', label='angle_num')
         plt.legend()
         plt.xlabel('t')
+        plt.ylabel('theta')
         plt.show()
         return None
 
