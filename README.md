@@ -11,9 +11,7 @@ in these situations.
 
 ## To do list
 
-* Rewrite numerical_3d.py as a subclass of ParaSolver
 * Rewrite numerical_2d.py as a subclass of ParaSolver
-* Change some access of methods of ParaSolver
 * Perform experiment in some flow
 
 ## Reference
