@@ -43,7 +43,7 @@ class Comparator:
 
 def test():
     # At most 7s, otherwise, beyond the biggest number that the computer can represent.
-    compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 300))
+    compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
     compartor.compare_ratio()
     compartor.compare_angle()
 

@@ -41,7 +41,7 @@ def simulation_3d(list_length, list_vectors):
 
 # plot the trajectory of a particle
 def plot_position(list_position):
-    print("Plotting trajectoiry...")
+    print("Plotting trajectory...")
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2],
@@ -49,33 +49,3 @@ def plot_position(list_position):
     ax.set(xlabel='X', ylabel='Y', zlabel='Z')
     print('Finished')
     plt.show()
-
-
-# the following code is to test the previous functions
-def test_simulation():
-    from case_2d.numerical_2d import NumericalSolver2D
-    temp = NumericalSolver2D.make_grad_tensor(s=.5, w=1, beta=0)
-    A = np.zeros((3, 3))
-    A[:2, :2] = temp
-    list_time = np.linspace(0, 5, 200)
-    list_A = [A for _ in list_time]
-
-    from common.paraSolver import ParaSolver
-    solver = ParaSolver(list_A=list_A, list_time=list_time)
-    list_eig_values, list_eig_vectors = solver.calc_eig_para()
-    list_length = np.sqrt(1 / np.array(list_eig_values))
-    print("Calculation Done!")
-
-    # animation
-    simulation_3d(list_length, list_eig_vectors)
-
-
-def test_position():
-    from common.file_io import read_position
-    filename = 'Utr.txt'
-    delta, list_position, list_velocity = read_position(filename)
-    plot_position(np.array(list_position))
-
-
-if __name__ == '__main__':
-    test_simulation()

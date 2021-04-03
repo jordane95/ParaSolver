@@ -1,6 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Documentation
+# gradient tensor : A
+# transformation tensor : F
+# deformation tensor : G
+# strain tensor : S = (A+A.T)/2
+# The procedure of the solver:
+# input: list_grad, list_time
+# -> compute transformation tensors, by _calc_list_F(), need list_A
+# -> compute deformations tensors, by decompose()
+# -> compute eigen parameters, by calc_eig_para(), need list_F
+# -> compute geo parameters, by calc_geo_para()
+#                                   - calc_ratio(), need list_eig_values
+#                                   - calc_angle(), need list_eig_vectors
+
 
 class ParaSolver:
     def __init__(self, list_A, list_time):
@@ -41,27 +55,11 @@ class ParaSolver:
         return self.list_F
 
     @staticmethod
-    def decompose(F, param_prev=None):
-        # new algorithm to decompose F to get eigen parameters
-        # in physical order
+    def decompose(F):
+        # decompose F to get eigen parameters
         F_inv = np.linalg.pinv(F)
         G = np.dot(F_inv.transpose(), F_inv)
-        param_next = np.linalg.eig(G)
-        values_next, vectors_next = param_next
-        if param_prev is not None:
-            values_prev, vectors_prev = param_prev
-            sim = np.abs(vectors_next.T @ vectors_prev)
-            sorted_idx = sim.argmax(axis=1)
-            # print('param_prev:', param_prev)
-            # print('param_next:', param_next)
-            # print('delta:', sim)
-            # print(sorted_idx)
-            values_next = values_next[sorted_idx]
-            vectors_next = vectors_next.T[sorted_idx].T
-            # print(values_next)
-            # print()
-        param_next = (values_next, vectors_next)
-        return param_next
+        return np.linalg.eig(G)
 
     def calc_eig_para(self, sort=False):
         # calculate the eig values and vectors at each time
@@ -69,9 +67,12 @@ class ParaSolver:
             self._calc_list_F()
         self.list_eig_values = []
         self.list_eig_vectors = []
-        for i, F in enumerate(self.list_F):
-            param = self.decompose(F) if i == 0 else self.decompose(F, param)
-            eig_values, eig_vectors = param
+        for F in self.list_F:
+            eig_values, eig_vectors = self.decompose(F)
+            if sort:
+                sorted_index = eig_values.argsort()
+                eig_values = np.array([eig_values[idx] for idx in sorted_index])
+                eig_vectors = np.array([eig_vectors[:, idx] for idx in sorted_index]).transpose()
             self.list_eig_values.append(eig_values)
             self.list_eig_vectors.append(eig_vectors)
         return self.list_eig_values, self.list_eig_vectors
@@ -163,41 +164,23 @@ class ParaSolver:
         self.list_S = [(A+A.T)/2 for A in self.list_A]
         return self.list_S
 
-    def decompose_S(self, S, params_prev=None):
-        values_next, vectors_next = np.linalg.eig(S)
-        if params_prev is not None:
-            values_prev, vectors_prev = params_prev
-            sim = np.abs(vectors_next.T @ vectors_prev)
-            sort_idx = np.argmax(sim, axis=1)
-            print(vectors_prev)
-            print(vectors_next)
-            print(sim)
-            print(sort_idx)
-            print()
-            values_next = values_next[sort_idx]
-            vectors_next = vectors_next.T[sort_idx].T
-        return values_next, vectors_next
-
-    def calc_eig_strain(self, sort=False):
+    def calc_eig_strain(self):
         self.list_eig_values_s = []
         self.list_eig_vectors_s = []
-        print(self.list_S)
-        for i, S in enumerate(self.list_S):
-            params = self.decompose(S) if i == 0 else self.decompose_S(S, params)
-            eig_value, eig_vector = params
-            # if sort:
-            #     index_sorted = eig_value.argsort()
-            #     eig_value = np.array([eig_value[i] for i in index_sorted])
-            #     eig_vector = np.array([eig_vector[:, i] for i in index_sorted]).transpose()
-            self.list_eig_values_s.append(eig_value)
-            self.list_eig_vectors_s.append(eig_vector)
+        for S in self.list_S:
+            eig_value, eig_vector = np.linalg.eig(S)
+            index_sorted = eig_value.argsort()
+            eig_value_sorted = np.array([eig_value[i] for i in index_sorted])
+            eig_vector_sorted = np.array([eig_vector[:, i] for i in index_sorted]).transpose()
+            self.list_eig_values_s.append(eig_value_sorted)
+            self.list_eig_vectors_s.append(eig_vector_sorted)
         return self.list_eig_values_s, self.list_eig_vectors_s
 
-    def calc_coli(self, normalize=False):
+    def calc_coli(self, abs=False):
         list_eig_vectors_e = self.list_eig_vectors
         list_eig_vectors_s = self.list_eig_vectors_s
         list_inner_product = [np.dot(e.transpose(), s) for (e, s) in zip(list_eig_vectors_e, list_eig_vectors_s)]
-        if normalize:
+        if abs:
             list_inner_product = np.abs(list_inner_product)
         self.list_inner_product = list_inner_product
         return list_inner_product
@@ -238,10 +221,10 @@ def make_grad_tensor(s_1, s_2, w_z):
 def test():
     A = make_grad_tensor(s_1=2, s_2=1, w_z=0.25)
 
-    steps = 500
+    steps = 5000
     list_A = [A for _ in range(steps)]
     paraSolver = ParaSolver(list_A=list_A, list_time=np.linspace(0, 5, steps))
-    paraSolver.calc_geo_para(sort=False, normalize=False)
+    paraSolver.calc_geo_para(sort=True, normalize=False)
     paraSolver.plot_ratio()
     paraSolver.plot_angle()
     paraSolver.plot_coli(normalize=False)

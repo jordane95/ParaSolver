@@ -28,18 +28,8 @@ def read_position(filename):
     return delta, np.array(list_position), np.array(list_velocity)
 
 
-def test_grad():
-    filename = 'gradU.txt'
-    delta, list_grad = read_grad(filename)
-    print(delta, type(delta))
-    print(list_grad)
-
-
-def test_position():
-    filename = 'Utr.txt'
-    delta, list_position, list_velocity = read_position(filename)
-    print(list_position)
-
-
-if __name__ == '__main__':
-    test_position()
+def get_position(filename):
+    with open(filename, 'r') as f:
+        delta_t = float(f.readline())
+        list_position = [[float(i) for i in line.strip().split(' ')] for line in f.readlines()]
+        return delta_t, np.array(list_position)

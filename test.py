@@ -1,6 +1,15 @@
-# This file is for test the usage of some functions in Python
-a = complex(2, 3)
+# This file is to test the usage of some functions in Python
+import numpy as np
 
-print(a)
-print(type(a)==complex)
-print(a.__abs__())
+A = np.array([[0],
+              [1],
+              [2]])
+
+
+B = np.array([1, 2, 3])
+
+idx = [2, 1, 1]
+print(B[idx])
+
+print(np.abs(A-B))
+print(np.abs(B-A))
