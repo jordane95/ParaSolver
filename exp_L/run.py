@@ -13,7 +13,7 @@ def run():
     # position
     position_file = 'Utr.txt'
     delta, list_position, list_velocity = read_position(position_file)
-    plot_position(list_position)
+    # plot_position(list_position)
 
     # simulation
     # list_eig_values, list_eig_vectors = solver.calc_eig_para(sort=True)
@@ -21,10 +21,12 @@ def run():
     # simulation_3d(list_length, list_eig_vectors)
 
     # data
-    solver.calc_geo_para(sort=True, normalize=True)
+    solver.calc_geo_para(normalize=True)
+    solver.calc_coli(normalize=True)
+
     solver.plot_ratio(log=False)
     solver.plot_angle()
-    solver.plot_coli(normalize=True)
+    solver.plot_coli()
 
 
 if __name__ == '__main__':

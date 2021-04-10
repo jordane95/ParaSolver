@@ -15,7 +15,7 @@ class AnaVsNum:
         list_time = self.list_t
         ana_solver = AnalyticalSolver2D(self.s, self.w, self.beta, self.list_t)
         num_solver = NumericalSolver2D(self.s, self.w, self.beta, self.list_t)
-        list_ratio_ana, list_angle_ana = ana_solver.calc_geo_para()
+        list_ratio_ana, list_angle_ana, list_angle_ana_ = ana_solver.calc_geo_para()
         list_ratio_num, list_angle_num = num_solver.calc_geo_para()
         # compare ratio
         plt.subplot(1, 2, 1)
@@ -29,6 +29,7 @@ class AnaVsNum:
         plt.subplot(1, 2, 2)
         plt.plot(list_time, list_angle_num, color='b', label='angle_num')
         plt.plot(list_time, list_angle_ana, color='r', label='angle_ana')
+        # plt.plot(list_time, list_angle_ana_, color='g', label="angle_ana_")
         plt.legend()
         plt.xlabel('time')
         plt.ylabel('angle')
@@ -39,7 +40,7 @@ class AnaVsNum:
 
 
 def test():
-    comparator = AnaVsNum(s=1, w=1, beta=0, list_t=np.linspace(0, 5, 500))
+    comparator = AnaVsNum(s=0.5, w=1, beta=0, list_t=np.linspace(0, 5, 500))
     comparator.compare()
 
 

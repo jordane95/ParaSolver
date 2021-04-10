@@ -16,9 +16,12 @@ class Comparator:
         self.list_ratios_ana, self.list_angle_ana = self.anaSolver.calc_geo_para()
         self.list_ratios_num, self.list_angles_num = self.numSolver.calc_geo_para()
 
-    def compare_ratio(self, dim=3):
+    def compare_ratio(self, dim=3, log=False):
         self.list_ratios_ana = np.array(self.list_ratios_ana)
         self.list_ratios_num = np.array(self.list_ratios_num)
+        if log:
+            self.list_ratios_ana = np.log(self.list_ratios_ana)
+            self.list_ratios_num = np.log(self.list_ratios_num)
         for i in range(dim):
             plt.subplot(1, 3, i+1)
             plt.plot(self.list_time, self.list_ratios_ana[:, i], color='r', label='ratio_ana')
@@ -44,7 +47,7 @@ class Comparator:
 def test():
     # At most 7s, otherwise, beyond the biggest number that the computer can represent.
     compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
-    compartor.compare_ratio()
+    compartor.compare_ratio(log=True)
     compartor.compare_angle()
 
 

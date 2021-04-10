@@ -22,9 +22,11 @@ def run():
 
     # data for analyse
     solver.calc_geo_para(normalize=True)
+    solver.calc_coli(normalize=True)
+
     solver.plot_ratio()
     solver.plot_angle()
-    solver.plot_coli(normalize=True)
+    solver.plot_coli()
 
 
 if __name__ == '__main__':

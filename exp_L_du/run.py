@@ -21,10 +21,12 @@ def run():
     # simulation_3d(list_length, list_eig_vectors)
 
     # data
-    solver.calc_geo_para(sort=True, normalize=True)
+    solver.calc_geo_para(normalize=True)
+    solver.calc_coli(normalize=True)
+
     solver.plot_ratio(log=False)
     solver.plot_angle()
-    solver.plot_coli(normalize=True)
+    solver.plot_coli()
 
 
 if __name__ == '__main__':

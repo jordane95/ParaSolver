@@ -1,22 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pprint
 
 
 # numerical solution of two-dimensional time-independent flow
 class NumericalSolver2D:
     def __init__(self, s, w, beta, list_time):
-        self.A = self.make_grad_tensor(s, w, beta)
-        self.list_time = list_time
-        self.list_ratio = None
-        self.list_angle = None
-
-    @staticmethod
-    def make_grad_tensor(s, w, beta):
         sym = np.array([[s * np.cos(2 * beta), s * np.sin(2 * beta)],
                         [s * np.sin(2 * beta), -s * np.cos(2 * beta)]])
         anti_sym = np.array([[0, -w],
                              [w, 0]])
-        return sym + anti_sym
+        self.A = sym + anti_sym
+
+        self.list_time = list_time
+        self.list_ratio = None
+        self.list_angle = None
 
     @staticmethod
     def calc_F_next(A, delta_t, F_prec, dim):
@@ -26,28 +24,31 @@ class NumericalSolver2D:
         return F
 
     @staticmethod
-    def decompose(F):
+    def decompose(F, params_prev=None):
         F_inv = np.linalg.pinv(F)
         G = np.dot(F_inv.transpose(), F_inv)
-        params = np.linalg.eig(G)
-        return params
-
-    # calculate the ratio and angle for two dimensional flow
-    # from the eig values and eig vectors
-    @staticmethod
-    def calc_ratio(list_value):
-        list_ratio = [np.sqrt(eig_values.max()/eig_values.min()) for eig_values in list_value]
-        return list_ratio
-
-    @staticmethod
-    def calc_angle(list_vectors):
-        list_angle = []
-        for rot_mat in list_vectors:
-            angle = np.arccos(rot_mat[0][0]) # if the axis inverse, the angle too
-            if np.abs(angle) > np.pi/2:
-                angle = angle-np.pi
-            list_angle.append(angle)
-        return list_angle
+        params_next = np.linalg.eig(G)
+        print()
+        print("Before sort:")
+        pprint.pprint(params_next)
+        if params_prev is not None:
+            eig_values_prev, eig_vectors_prev = params_prev
+            eig_values_next, eig_vectors_next = params_next
+            sim = np.abs(eig_vectors_next.T @ eig_vectors_prev)
+            # print("Similarity Matrix:\n", sim)
+            sort_idx = np.argmax(sim, axis=1)
+            print("Sort idx: ", sort_idx)
+            eig_values_next = eig_values_next[sort_idx]
+            eig_vectors_next = (eig_vectors_next.T[sort_idx]).T
+            # for j in range(eig_vectors_next.shape[1]):
+            #     eig_vectors = eig_vectors_next[:, j]
+            #     if eig_vectors[1] < 0: # sin<0
+            #         eig_vectors_next[:, j] = -eig_vectors
+            if sort_idx[0] == 1: print("=" * 10 + "Inversion here" + "=" * 80)
+            params_next = (eig_values_next, eig_vectors_next)
+        print("After sort: ")
+        pprint.pprint(params_next)
+        return params_next
 
     def calc_eig_para(self):
         dim = 2
@@ -63,11 +64,35 @@ class NumericalSolver2D:
         # calculate the deformation parameters at each time
         list_value = []
         list_vector = []
+        params = (np.array([1, 1]), np.eye(2))
         for F in list_F:
-            eig_value, eig_vector = self.decompose(F)
+            params = self.decompose(F, params)
+            eig_value, eig_vector = params
             list_value.append(eig_value)
             list_vector.append(eig_vector)
         return list_value, list_vector
+
+    # calculate the ratio and angle for two dimensional flow
+    # from the eig values and eig vectors
+    @staticmethod
+    def calc_ratio(list_value):
+        # list_ratio = [np.sqrt(eig_values.max() / eig_values.min()) for eig_values in list_value]
+        list_ratio = [np.sqrt(eig_values[1]/eig_values[0]) for eig_values in list_value]
+        return list_ratio
+
+    @staticmethod
+    def calc_angle(list_vectors):
+        list_angle = []
+        for rot_mat in list_vectors:
+            # pprint.pprint(rot_mat)
+            # if rot_mat[1][0] >= 0: angle = np.arccos(rot_mat[0][0])
+            # if rot_mat[1][0] < 0: angle = np.arccos(-rot_mat[0][0])
+            angle = np.arccos(rot_mat[0][0])
+            if angle > np.pi/2: angle -= np.pi
+            if angle < -np.pi/2: angle += np.pi
+            # print(angle)
+            list_angle.append(angle)
+        return list_angle
 
     def calc_geo_para(self):
         list_value, list_vector = self.calc_eig_para()

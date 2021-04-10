@@ -25,7 +25,7 @@ class AnalyticalSolver3D:
             ratio_xy = np.sqrt((p+q)/(p-q))
             ratio_xz = np.sqrt(2*np.exp(3*(s_1+s_2)*t)/(p-q))
             ratio_yz = np.sqrt(2*np.exp(3*(s_1+s_2)*t)/(p+q))
-            list_ratios.append([ratio_xy, ratio_yz, ratio_xz])
+            list_ratios.append([ratio_xy, ratio_xz, ratio_yz])
             # calculate angle
             tan = -w_z*np.tanh(b*t)/b
             theta = np.arctan(tan)/2
