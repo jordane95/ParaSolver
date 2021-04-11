@@ -3,18 +3,21 @@ from common.fileIO import read_grad, read_position
 from common.visualization import plot_position
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 class StatSolver:
     def __init__(self, path, num, delta_t, steps) -> None:
         self.num = num
+
+        self.lists_position = []
         self.solver = []
         self.list_time = np.array([delta_t*i for i in range(steps)])
         for i in range(num):
             pos_name = path + "U_" + str(i) + ".txt"
             grad_name = path + "Grad_" + str(i) + ".txt"
             delta_t, list_position, list_v = read_position(pos_name)
-            plot_position(list_position, dest=str(i)+".png")
+            self.lists_position.append(list_position)
             delta_t, list_grad = read_grad(grad_name)
             self.solver.append(ParaSolver(list_grad[:steps], self.list_time))
 
@@ -26,7 +29,7 @@ class StatSolver:
         self.list_angles_avg = None
         self.list_coli_avg = None
 
-    def solve(self):
+    def solve(self) -> None:
         self.lists_ratios, self.lists_angles = [], []
         self.lists_coli = []
         for para_solver in self.solver:
@@ -40,19 +43,20 @@ class StatSolver:
         self.lists_coli = np.array(self.lists_coli)
         # import pprint
         # pprint.pprint(self.lists_ratios)
-        return None
 
-    def calc_avg(self):
+    def calc_avg(self, save_path=None) -> None:
         self.list_ratios_avg = np.sum(self.lists_ratios, axis=0) / self.num
         self.list_angles_avg = np.sum(self.lists_angles, axis=0) / self.num
         self.list_coli_avg = np.sum(self.lists_coli, axis=0) / self.num
-        return None
+        if save_path is not None:
+            np.save("list_ratios_avg.npy", self.list_ratios_avg)
+            np.save("list_angles_avg.npy", self.list_angles_avg)
+            np.save("list_coli_avg.npy", self.list_coli_avg)
 
-    def plot_ratio_avg(self, log=False):
+    def plot_ratio_avg(self, log=False, save_path=None):
         list_ratios = np.array(self.list_ratios_avg)
         list_time = self.list_time
-        if log:
-            list_ratios = np.log(list_ratios)
+        if log: list_ratios = np.log(list_ratios)
         labels = ['a_1/a_0', 'a_2/a_1', 'a_2/a_0']
         for i in range(3):
             plt.subplot(1, 3, i + 1)
@@ -61,9 +65,12 @@ class StatSolver:
             plt.ylabel('ratio')
             plt.legend()
         plt.show()
-        return None
+        if save_path is not None:
+            plt.savefig(save_path)
+        else:
+            plt.show()
 
-    def plot_angle_avg(self):
+    def plot_angle_avg(self, save_path=None):
         list_angles = np.array(self.list_angles_avg)
         num = 0
         for i in range(3):
@@ -76,10 +83,12 @@ class StatSolver:
                 plt.legend()
                 plt.xlabel('t')
                 plt.ylabel('theta')
-        plt.show()
-        return None
+        if save_path is not None:
+            plt.savefig(save_path)
+        else:
+            plt.show()
 
-    def plot_coli_avg(self):
+    def plot_coli_avg(self, save_path=None):
         list_coli = self.list_coli_avg
         num = 0
         for i in range(3):
@@ -92,7 +101,13 @@ class StatSolver:
                 plt.legend()
                 plt.xlabel('t')
                 plt.ylabel('inner product')
-        plt.show()
+        if save_path is not None: plt.savefig(save_path)
+        else: plt.show()
 
-    def calc_distribution(self):
-        return None
+    # def calc_distribution(self):
+    #     return None
+
+    def save_trajectory(self):
+        if not os.path.exists("./img/"): os.mkdir("img")
+        for i, list_position in enumerate(self.lists_position):
+            plot_position(list_position, save_dest="./img/position_"+str(i)+".png")

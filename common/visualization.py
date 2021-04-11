@@ -40,7 +40,7 @@ def simulation_3d(list_length, list_vectors):
 
 
 # plot the trajectory of a particle
-def plot_position(list_position, dest=None):
+def plot_position(list_position, save_dest=None):
     print("Plotting trajectory...")
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -48,7 +48,7 @@ def plot_position(list_position, dest=None):
                c='b', marker='o', s=1)
     ax.set(xlabel='X', ylabel='Y', zlabel='Z')
     print('Finished')
-    if dest is not None:
-        plt.savefig(dest)
+    if save_dest is not None:
+        plt.savefig(save_dest)
     else:
         plt.show()
