@@ -10,7 +10,7 @@ def run():
     list_time = [delta_t * i for i in range(len(list_A))]
     solver = ParaSolver(list_A, list_time)
 
-    # position
+    # # position
     # filename = 'Utr.txt'
     # delta_t, list_position = get_position(filename)
     # plot_position(list_position)

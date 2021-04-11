@@ -10,9 +10,9 @@ def run():
     solver = ParaSolver(list_A, list_time)
 
     # # position
-    # filename = 'Utr-0.001.txt'
-    # delta_t, list_position = get_position(filename)
-    # plot_position(list_position)
+    filename = 'Utr-0.001.txt'
+    delta_t, list_position = get_position(filename)
+    plot_position(list_position)
 
     # # visualization
     # list_eig_values, list_eig_vectors = solver.calc_eig_para()

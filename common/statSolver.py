@@ -1,5 +1,6 @@
 from common.paraSolver import ParaSolver
 from common.fileIO import read_grad, read_position
+from common.visualization import plot_position
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,6 +14,7 @@ class StatSolver:
             pos_name = path + "U_" + str(i) + ".txt"
             grad_name = path + "Grad_" + str(i) + ".txt"
             delta_t, list_position, list_v = read_position(pos_name)
+            plot_position(list_position, dest=str(i)+".png")
             delta_t, list_grad = read_grad(grad_name)
             self.solver.append(ParaSolver(list_grad[:steps], self.list_time))
 
@@ -94,25 +96,3 @@ class StatSolver:
 
     def calc_distribution(self):
         return None
-
-
-def test_liu():
-    stat_solver = StatSolver(path="../data_L_liu/", num=10, delta_t=0.001, steps=2000)
-    stat_solver.solve()
-    stat_solver.calc_avg()
-    stat_solver.plot_ratio_avg()
-    stat_solver.plot_angle_avg()
-    stat_solver.plot_coli_avg()
-
-
-def test_du():
-    stat_solver = StatSolver(path="../data_L_du/", num=10, delta_t=0.0001, steps=40000)
-    stat_solver.solve()
-    stat_solver.calc_avg()
-    stat_solver.plot_ratio_avg()
-    stat_solver.plot_angle_avg()
-    stat_solver.plot_coli_avg()
-
-
-if __name__ == '__main__':
-    test_du()
