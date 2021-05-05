@@ -1,17 +1,10 @@
-from common.statSolver import StatSolver
-import numpy as np
+from exp.exp_stat.experiment import run
 
-
-def run():
-    stat_solver = StatSolver(path="./data/", num=np.arange(10), delta_t=0.0001, steps=40000)
-    # stat_solver.solve()
-    # stat_solver.calc_avg()
-    # stat_solver.plot_ratio_avg()
-    # stat_solver.plot_angle_avg()
-    # stat_solver.plot_coli_avg()
-
-    stat_solver.save_trajectory()
-
+nums = 10
+delta_t = 0.0001
+steps = 40000
+calc_para = False
+plot_traj = True
 
 if __name__ == '__main__':
-    run()
+    run(nums=nums, delta_t=delta_t, steps=steps, calc_para=calc_para, plot_traj=plot_traj)
