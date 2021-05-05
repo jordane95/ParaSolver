@@ -40,7 +40,7 @@ class AnaVsNum:
 
 
 def test():
-    comparator = AnaVsNum(s=0.5, w=1, beta=0, list_t=np.linspace(0, 5, 500))
+    comparator = AnaVsNum(s=0.5, w=1, beta=0, list_t=np.linspace(0, 10, 1000))
     comparator.compare()
 
 

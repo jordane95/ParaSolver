@@ -9,10 +9,10 @@ def run():
     list_time = [delta_t*i for i in range(len(list_A))]
     solver = ParaSolver(list_A, list_time)
 
-    # # position
+    # # plot trajectory
     filename = 'Utr-0.001.txt'
     delta_t, list_position = get_position(filename)
-    plot_position(list_position)
+    plot_position(list_position, delta=0.001, max_time=1.6)
 
     # # visualization
     # list_eig_values, list_eig_vectors = solver.calc_eig_para()
@@ -20,13 +20,13 @@ def run():
     # print('calculation done')
     # simulation_3d(list_length, list_eig_vectors)
 
-    # data for analyse
-    solver.calc_geo_para(normalize=True)
-    solver.calc_coli(normalize=True)
-
-    solver.plot_ratio()
-    solver.plot_angle()
-    solver.plot_coli()
+    # # data for analyse
+    # solver.calc_geo_para(normalize=True)
+    # solver.calc_coli(normalize=True)
+    #
+    # solver.plot_ratio()
+    # solver.plot_angle()
+    # solver.plot_coli()
 
 
 if __name__ == '__main__':

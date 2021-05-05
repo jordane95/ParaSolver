@@ -9,11 +9,13 @@ import os
 class StatSolver:
     def __init__(self, path, num, delta_t, steps) -> None:
         self.num = num
+        self.delta_t = delta_t
+        self.steps = steps
 
         self.lists_position = []
         self.solver = []
         self.list_time = np.array([delta_t*i for i in range(steps)])
-        for i in range(num):
+        for i in num:
             pos_name = path + "U_" + str(i) + ".txt"
             grad_name = path + "Grad_" + str(i) + ".txt"
             delta_t, list_position, list_v = read_position(pos_name)
@@ -45,9 +47,9 @@ class StatSolver:
         # pprint.pprint(self.lists_ratios)
 
     def calc_avg(self, save_path=None) -> None:
-        self.list_ratios_avg = np.sum(self.lists_ratios, axis=0) / self.num
-        self.list_angles_avg = np.sum(self.lists_angles, axis=0) / self.num
-        self.list_coli_avg = np.sum(self.lists_coli, axis=0) / self.num
+        self.list_ratios_avg = np.sum(self.lists_ratios, axis=0) / len(self.num)
+        self.list_angles_avg = np.sum(self.lists_angles, axis=0) / len(self.num)
+        self.list_coli_avg = np.sum(self.lists_coli, axis=0) / len(self.num)
         if save_path is not None:
             np.save("list_ratios_avg.npy", self.list_ratios_avg)
             np.save("list_angles_avg.npy", self.list_angles_avg)
@@ -109,5 +111,5 @@ class StatSolver:
 
     def save_trajectory(self):
         if not os.path.exists("./img/"): os.mkdir("img")
-        for i, list_position in enumerate(self.lists_position):
-            plot_position(list_position, save_dest="./img/position_"+str(i)+".png")
+        for i, list_position in zip(self.num, self.lists_position):
+            plot_position(list_position, delta=self.delta_t, max_time=self.delta_t*self.steps-0.1, save_dest="./img/position_"+str(i)+".png")

@@ -40,13 +40,20 @@ def simulation_3d(list_length, list_vectors):
 
 
 # plot the trajectory of a particle
-def plot_position(list_position, save_dest=None):
+def plot_position(list_position, save_dest=None, delta=None, max_time=None):
     print("Plotting trajectory...")
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2],
-               c='b', marker='o', s=1)
+    ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2], c='b', marker='o', s=1)
     ax.set(xlabel='X', ylabel='Y', zlabel='Z')
+    points_idx = []
+    time = 0
+    while time <= max_time:
+        points_idx.append(int(time/delta))
+        time += 0.5
+    for idx, i in enumerate(points_idx):
+        ax.scatter(list_position[i, 0], list_position[i, 1], list_position[i, 2], c='r')
+        ax.text(list_position[i, 0], list_position[i, 1], list_position[i, 2], "t="+str(idx*0.5)+"s", c='r')
     print('Finished')
     if save_dest is not None:
         plt.savefig(save_dest)

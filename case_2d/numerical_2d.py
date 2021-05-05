@@ -88,8 +88,8 @@ class NumericalSolver2D:
             # if rot_mat[1][0] >= 0: angle = np.arccos(rot_mat[0][0])
             # if rot_mat[1][0] < 0: angle = np.arccos(-rot_mat[0][0])
             angle = np.arccos(rot_mat[0][0])
-            if angle > np.pi/2: angle -= np.pi
-            if angle < -np.pi/2: angle += np.pi
+            # if angle > np.pi/2: angle -= np.pi
+            # if angle < -np.pi/2: angle += np.pi
             # print(angle)
             list_angle.append(angle)
         return list_angle

@@ -104,12 +104,6 @@ class ParaSolver:
         return np.array(list_angles)
 
     def calc_geo_para(self, normalize=False):
-        """
-
-        :param sort:
-        :param normalize:
-        :return:
-        """
         self.calc_eig_para()
         self.list_ratios = self.calc_ratio(self.list_eig_values)
         self.list_angles = self.calc_angle(self.list_eig_vectors, normalize)
@@ -250,7 +244,7 @@ def test():
         para_solver.save_data()
     para_solver.plot_ratio()
     para_solver.plot_angle()
-    para_solver.plot_coli(normalize=True)
+    para_solver.plot_coli()
 
 
 if __name__ == '__main__':

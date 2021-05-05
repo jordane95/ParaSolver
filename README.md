@@ -8,11 +8,14 @@ in these situations.
 # Functions
 
 * ParaSolver
+* StatSolver
+* Visualization
 
-## To do list
+## TODO
 
-* Rewrite numerical_2d.py as a subclass of ParaSolver
-* Perform experiment in some flow
+* Plot the geometric surface of the fluid flow 
+* Perform experiment on large amount of data
+* Performance optimization
 
 ## Reference
 

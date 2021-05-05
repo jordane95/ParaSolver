@@ -22,13 +22,14 @@ class Comparator:
         if log:
             self.list_ratios_ana = np.log(self.list_ratios_ana)
             self.list_ratios_num = np.log(self.list_ratios_num)
+        y_labels = ['a_1/a_2', 'a_1/a_3', 'a_2/a_3']
         for i in range(dim):
             plt.subplot(1, 3, i+1)
             plt.plot(self.list_time, self.list_ratios_ana[:, i], color='r', label='ratio_ana')
             plt.plot(self.list_time, self.list_ratios_num[:, i], color='b', label='ratio_num')
             plt.legend()
-            plt.xlabel('t')
-            plt.ylabel('ratio')
+            plt.xlabel('time')
+            plt.ylabel(y_labels[i])
         plt.show()
         return None
 
@@ -38,7 +39,7 @@ class Comparator:
         plt.plot(self.list_time, self.list_angle_ana, color='r', label='angle_ana')
         plt.plot(self.list_time, self.list_angles_num[:, 0, 0], color='b', label='angle_num')
         plt.legend()
-        plt.xlabel('t')
+        plt.xlabel('time')
         plt.ylabel('theta')
         plt.show()
         return None
@@ -47,7 +48,7 @@ class Comparator:
 def test():
     # At most 7s, otherwise, beyond the biggest number that the computer can represent.
     compartor = Comparator(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 5, 500))
-    compartor.compare_ratio(log=True)
+    compartor.compare_ratio(log=False)
     compartor.compare_angle()
 
 

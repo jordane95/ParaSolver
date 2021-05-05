@@ -10,10 +10,10 @@ def run():
     list_time = [delta_t * i for i in range(len(list_A))]
     solver = ParaSolver(list_A, list_time)
 
-    # # position
-    # filename = 'Utr.txt'
-    # delta_t, list_position = get_position(filename)
-    # plot_position(list_position)
+    # position
+    filename = 'Utr.txt'
+    delta_t, list_position = get_position(filename)
+    plot_position(list_position, delta=0.0005, max_time=2.9)
 
     # visualization
     # list_eig_values, list_eig_vectors = solver.calc_eig_para(sort=True)
