@@ -40,11 +40,11 @@ def simulation_3d(list_length, list_vectors):
 
 
 # plot the trajectory of a particle
-def plot_position(list_position, save_dest=None, delta=None, max_time=None):
+def plot_position(list_position, save_dest=None, delta=None, max_time=None, shape=None):
     print("Plotting trajectory...")
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2], c='b', marker='o', s=1)
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2], c='b', s=0.1)
     ax.set(xlabel='X', ylabel='Y', zlabel='Z')
     points_idx = []
     time = 0
@@ -52,10 +52,41 @@ def plot_position(list_position, save_dest=None, delta=None, max_time=None):
         points_idx.append(int(time/delta))
         time += 0.5
     for idx, i in enumerate(points_idx):
-        ax.scatter(list_position[i, 0], list_position[i, 1], list_position[i, 2], c='r')
-        ax.text(list_position[i, 0], list_position[i, 1], list_position[i, 2], "t="+str(idx*0.5)+"s", c='r')
+        ax.scatter(list_position[i, 0], list_position[i, 1], list_position[i, 2], c='r', marker='^', s=10)
+        ax.text(list_position[i, 0], list_position[i, 1], list_position[i, 2], 't='+str(idx*0.5)+"s", c='r', fontsize=7)
     print('Finished')
+    # plot surface shape
+    if shape == 'l':
+        plot_l_pipe(ax)
     if save_dest is not None:
         plt.savefig(save_dest)
     else:
         plt.show()
+
+
+def plot_l_pipe(ax, d=0.1):
+    r = d/2
+    t = np.linspace(0, 2*np.pi, 50)
+    # first cylinder
+    for i in np.linspace(0, 0.3, 10):
+        end_points = [0+r*np.cos(t), 0+r*np.sin(t), np.array([i]*50)]
+        ax.plot(end_points[0], end_points[1], end_points[2], color='g')
+    # middle part
+    start = np.array([.1, 0, .3])
+    thetas = np.linspace(0, np.pi/2, 10)
+    for theta in thetas:
+        a = [-np.cos(theta), 0, np.sin(theta)]
+        b = [0, 1, 0]
+        center = start+d*np.array(a)
+        X = [None]*3
+        for i in range(3):
+            X[i] = center[i]+r*np.cos(t)*a[i]+r*np.sin(t)*b[i]
+        # print(X)
+        ax.plot(X[0], X[1], X[2], color='g')
+    # second cylinder
+    for i in np.linspace(0.1, 0.6, 30):
+        end_points = [np.array([i]*50), 0+r*np.cos(t), 0.4+r*np.sin(t)]
+        ax.plot(end_points[0], end_points[1], end_points[2], color='g')
+    ax.set_xlim(-0.1, 0.5)
+    ax.set_ylim(-0.3, 0.3)
+    ax.set_zlim(-0.1, 0.5)

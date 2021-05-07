@@ -109,7 +109,12 @@ class StatSolver:
     # def calc_distribution(self):
     #     return None
 
-    def save_trajectory(self):
+    def plot_trajectory(self, shape=None):
+        for i, list_position in zip(self.num, self.lists_position):
+            plot_position(list_position, delta=self.delta_t, max_time=self.delta_t*self.steps-0.1, shape=shape)
+        return None
+
+    def save_trajectory(self, save_path="./img/position_", shape=None):
         if not os.path.exists("./img/"): os.mkdir("img")
         for i, list_position in zip(self.num, self.lists_position):
-            plot_position(list_position, delta=self.delta_t, max_time=self.delta_t*self.steps-0.1, save_dest="./img/position_"+str(i)+".png")
+            plot_position(list_position, delta=self.delta_t, max_time=self.delta_t*self.steps-0.1, save_dest=save_path+str(i)+".png", shape=shape)

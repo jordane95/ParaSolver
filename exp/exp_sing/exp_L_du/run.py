@@ -13,7 +13,7 @@ def run():
     # position
     filename = 'Utr.txt'
     delta_t, list_position = get_position(filename)
-    plot_position(list_position, delta=0.0005, max_time=2.9)
+    plot_position(list_position, delta=0.0005, max_time=2.9, shape='l')
 
     # visualization
     # list_eig_values, list_eig_vectors = solver.calc_eig_para(sort=True)
@@ -23,10 +23,10 @@ def run():
     # data
     solver.calc_geo_para(normalize=True)
     solver.calc_coli(normalize=True)
-
-    solver.plot_ratio(log=False)
-    solver.plot_angle()
-    solver.plot_coli()
+    max_time = 3
+    solver.plot_ratio(log=False, max_time=3)
+    solver.plot_angle(max_time)
+    solver.plot_coli(max_time)
 
 
 if __name__ == '__main__':

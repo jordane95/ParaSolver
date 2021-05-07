@@ -113,24 +113,42 @@ class ParaSolver:
         self.list_lengths = np.sqrt(1/(np.array(self.list_eig_values)+1e-8))
         return self.list_lengths
 
-    def plot_ratio(self, log=False):
+    def get_indexs(self, max_time=3, step=0.5):
+        t = 0
+        ids = []
+        while t < max_time:
+            i = int(t / self.delta_t)
+            ids.append(i)
+            t += step
+        return ids
+
+    def plot_ratio(self, log=False, max_time=None):
         list_ratios = np.array(self.list_ratios)
         list_time = self.list_time
+        # special case
         if log:
             list_ratios = np.log(list_ratios)
+        if max_time:
+            ids = self.get_indexs(max_time)
         labels = ['a_1/a_0', 'a_2/a_0', 'a_2/a_1']
         for i in range(3):
             plt.subplot(1, 3, i+1)
             plt.plot(list_time, list_ratios[:, i], label=labels[i])
+            if max_time:
+                for idx in ids:
+                    plt.scatter(list_time[idx], list_ratios[idx, i], marker='^', c='r', s=20)
             plt.xlabel('t')
             plt.ylabel('ratio')
             plt.legend()
         plt.show()
+
         return None
 
-    def plot_angle(self):
+    def plot_angle(self, max_time=None):
         list_angles = np.array(self.list_angles)
         num = 0
+        if max_time:
+            ids = self.get_indexs(max_time=max_time)
         for i in range(3):
             for j in range(3):
                 num += 1
@@ -138,6 +156,9 @@ class ParaSolver:
                 plt.ylim(0, np.pi/2+0.1)
                 plt.plot(self.list_time, list_angles[:, i, j],
                          label='angle(e_'+str(j+1)+', x_'+str(i+1)+')')
+                if max_time:
+                    for idx in ids:
+                        plt.scatter(self.list_time[idx], list_angles[idx, i, j], marker='^', c='r', s=20)
                 plt.legend()
                 plt.xlabel('t')
                 plt.ylabel('theta')
@@ -187,12 +208,14 @@ class ParaSolver:
         self.list_inner_product = list_inner_product
         return list_inner_product
 
-    def plot_coli(self):
+    def plot_coli(self, max_time=None):
         list_time = self.list_time
         list_coli = self.list_inner_product
         # for coli in list_coli:
         #     print(coli)
         num = 0
+        if max_time:
+            ids = self.get_indexs(max_time=max_time)
         for i in range(3):
             for j in range(3):
                 num += 1
@@ -200,6 +223,9 @@ class ParaSolver:
                 plt.ylim(0, 1)
                 plt.plot(list_time, [coli[i, j] for coli in list_coli],
                          label='<e_'+str(i+1)+', s_'+str(j+1)+'>')
+                if max_time:
+                    for idx in ids:
+                        plt.scatter(list_time[idx], list_coli[idx, i, j], marker='^', c='r', s=20)
                 plt.legend()
                 plt.xlabel('t')
                 plt.ylabel('inner product')

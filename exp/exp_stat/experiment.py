@@ -2,7 +2,7 @@ from common.statSolver import StatSolver
 import numpy as np
 
 
-def run(nums, delta_t, steps, calc_para=False, plot_traj=False):
+def run(nums, delta_t, steps, calc_para=False, plot_traj=False, save_traj=False, shape=None, save_path="./img/position_"):
     stat_solver = StatSolver(path="./data/", num=np.arange(nums), delta_t=delta_t, steps=steps)
     if calc_para:
         stat_solver.solve()
@@ -11,7 +11,9 @@ def run(nums, delta_t, steps, calc_para=False, plot_traj=False):
         stat_solver.plot_angle_avg()
         stat_solver.plot_coli_avg()
     if plot_traj:
-        stat_solver.save_trajectory()
+        stat_solver.plot_trajectory(shape)
+    if save_traj:
+        stat_solver.save_trajectory(shape=shape, save_path=save_path)
 
 
 if __name__ == '__main__':
