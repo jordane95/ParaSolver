@@ -44,8 +44,8 @@ class AnaVsNum:
 
 
 def test():
-    comparator = AnaVsNum(s=1, w=0.5, beta=0, list_t=np.linspace(0, 5, 100))
-    comparator.compare(log=True)
+    comparator = AnaVsNum(s=0.5, w=1, beta=0, list_t=np.linspace(0, 10, 100))
+    comparator.compare(log=False)
 
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ in these situations.
 * common: implementations of the core function
     * fileIO
     * paraSolver
-    * visualization
+    * visualization: geometric simulation
     
 * example: some running results
 * exp: where we do experiments using functions implemented in common

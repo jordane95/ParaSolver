@@ -138,7 +138,7 @@ class ParaSolver:
     def plot_ratio(self, log=False, max_time=None):
         list_ratios = np.array(self.list_ratios)
         list_time = self.list_time
-        labels = ['a_2/a_1', 'a_3/a_1', 'a_3/a_2']
+        labels = ['a_1/a_2', 'a_1/a_3', 'a_2/a_3']
         # special case
         if log:
             list_ratios = np.log(list_ratios)
