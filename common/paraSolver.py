@@ -1,6 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Documentation
+# gradient tensor : A
+# transformation tensor : F
+# deformation tensor : G
+# strain tensor : S = (A+A.T)/2
+# The procedure of the solver:
+# input: list_grad, list_time
+# -> compute transformation tensors, by _calc_list_F(), need list_A
+# -> compute deformations tensors, by decompose()
+# -> compute eigen parameters, by calc_eig_para(), need list_F
+# -> compute geo parameters, by calc_geo_para()
+#                                   - calc_ratio(), need list_eig_values
+#                                   - calc_angle(), need list_eig_vectors
+
 
 class ParaSolver:
     def __init__(self, list_A, list_time):
@@ -41,12 +55,10 @@ class ParaSolver:
         return self.list_F
 
     @staticmethod
-    def decompose(F, param_prev=None):
-        # new algorithm to decompose F to get eigen parameters
+    def decompose(E, param_prev=None):
+        # new algorithm to decompose E to get eigen parameters
         # in physical order
-        F_inv = np.linalg.pinv(F)
-        G = np.dot(F_inv.transpose(), F_inv)
-        param_next = np.linalg.eig(G)
+        param_next = np.linalg.eig(E)
         if param_prev is not None:
             values_prev, vectors_prev = param_prev
             values_next, vectors_next = param_next
@@ -70,8 +82,9 @@ class ParaSolver:
         self.list_eig_vectors = []
         params = (np.array([1, 1, 1]), np.eye(3, dtype=float))
         for i, F in enumerate(self.list_F):
-            # params = self.decompose(F, params) if i != 0 else self.decompose(F)
-            params = self.decompose(F, params)
+            F_inv = np.linalg.pinv(F)
+            E = np.dot(F_inv.transpose(), F_inv)
+            params = self.decompose(E, params)
             eig_values, eig_vectors = params
             self.list_eig_values.append(eig_values)
             self.list_eig_vectors.append(eig_vectors)
@@ -125,12 +138,13 @@ class ParaSolver:
     def plot_ratio(self, log=False, max_time=None):
         list_ratios = np.array(self.list_ratios)
         list_time = self.list_time
+        labels = ['a_2/a_1', 'a_3/a_1', 'a_3/a_2']
         # special case
         if log:
             list_ratios = np.log(list_ratios)
+            labels = ['log('+label+')' for label in labels]
         if max_time:
             ids = self.get_indexs(max_time)
-        labels = ['a_1/a_0', 'a_2/a_0', 'a_2/a_1']
         for i in range(3):
             plt.subplot(1, 3, i+1)
             plt.plot(list_time, list_ratios[:, i], label=labels[i])
@@ -141,7 +155,6 @@ class ParaSolver:
             plt.ylabel('ratio')
             plt.legend()
         plt.show()
-
         return None
 
     def plot_angle(self, max_time=None):
@@ -169,29 +182,12 @@ class ParaSolver:
         self.list_S = [(A+A.T)/2 for A in self.list_A]
         return self.list_S
 
-    def decompose_S(self, S, params_prev=None):
-        values_next, vectors_next = np.linalg.eig(S)
-        if params_prev is not None:
-            values_prev, vectors_prev = params_prev
-            sim = np.abs(vectors_prev.T @ vectors_next)
-            sort_idx = np.argmax(sim, axis=1)
-            # print(vectors_prev)
-            # print(vectors_next)
-            # print(sim)
-            # print(sort_idx)
-            # print()
-            values_next = values_next[sort_idx]
-            vectors_next = vectors_next.T[sort_idx].T
-        return values_next, vectors_next
-
     def calc_eig_strain(self):
         self.list_eig_values_s = []
         self.list_eig_vectors_s = []
-        # print(self.list_S)
         params = (np.array([1, 1, 1]), np.eye(3))
         for i, S in enumerate(self.list_S):
-            # params = self.decompose(S, params) if i != 0 else self.decompose(S)
-            params = self.decompose_S(S, params)
+            params = self.decompose(S, params)
             eig_value, eig_vector = params
             self.list_eig_values_s.append(eig_value)
             self.list_eig_vectors_s.append(eig_vector)
@@ -232,11 +228,40 @@ class ParaSolver:
         plt.show()
         return None
 
+    ############################################################################
+    ##########                    UNDER DEVELOPEMENT               #############
     # calculate rot omega
     def calc_omega(self):
         list_W = np.array([(A-A.T)/2 for A in self.list_A])
         self.list_omega = [np.array([W[1, 0], W[2, 0], W[2, 1]]) for W in list_W]
+        # print(self.list_omega)
         return self.list_omega
+
+    def calc_coli_omega(self):
+        list_eig_vectors_e = self.list_eig_vectors
+        list_omega = self.list_omega
+        self.list_coli_o = []
+        for eig_vectors, omega in zip(list_eig_vectors_e, list_omega):
+            self.list_coli_o.append(np.dot(omega.reshape(1, 3), eig_vectors).flatten())
+        self.list_coli_o = np.array(self.list_coli_o)
+        return np.array(self.list_coli_o)
+
+    def plot_coli_o(self, max_time=None):
+        list_coli_o = np.array(self.list_coli_o)
+        list_time = self.list_time
+        if max_time:
+            ids = self.get_indexs(max_time)
+        labels = ['a_1/a_0', 'a_2/a_0', 'a_2/a_1']
+        for i in range(3):
+            plt.subplot(1, 3, i + 1)
+            plt.plot(list_time, list_coli_o[:, i], label=labels[i])
+            if max_time:
+                for idx in ids:
+                    plt.scatter(list_time[idx], list_coli_o[idx, i], marker='^', c='r', s=20)
+            plt.xlabel('t')
+            plt.ylabel('coli_o')
+            plt.legend()
+        plt.show()
 
     def save_data(self):
         np.save("list_ratios.npy", self.list_ratios)
@@ -247,6 +272,8 @@ class ParaSolver:
         self.list_ratios = np.load("list_ratios.npy")
         self.list_angles = np.load("list_angles.npy")
         self.list_inner_product = np.load("list_colis.npy")
+    ##############                  END                          ###############
+    ############################################################################
 
 
 def make_grad_tensor(s_1, s_2, w_z):
@@ -267,10 +294,13 @@ def test():
     else:
         para_solver.calc_geo_para(normalize=True)
         para_solver.calc_coli(normalize=True)
-        para_solver.save_data()
-    para_solver.plot_ratio()
+        # para_solver.save_data()
+    para_solver.plot_ratio(log=True)
     para_solver.plot_angle()
     para_solver.plot_coli()
+    # para_solver.calc_omega()
+    # para_solver.calc_coli_omega()
+    # para_solver.plot_coli_o()
 
 
 if __name__ == '__main__':

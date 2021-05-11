@@ -5,7 +5,7 @@ from common.visualization import simulation_3d
 
 def test():
     # get data
-    solver = NumericalSolver3D(s_1=2, s_2=1, w_z=0.75, list_time=np.linspace(0, 1, 100))
+    solver = NumericalSolver3D(s_1=2, s_2=1, w_z=0.25, list_time=np.linspace(0, 1, 100))
     solver.calc_eig_para()
     solver.calc_geo_para()
     list_length = np.sqrt(1/np.array(solver.list_eig_values))

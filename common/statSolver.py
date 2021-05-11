@@ -58,8 +58,11 @@ class StatSolver:
     def plot_ratio_avg(self, log=False, save_path=None):
         list_ratios = np.array(self.list_ratios_avg)
         list_time = self.list_time
-        if log: list_ratios = np.log(list_ratios)
         labels = ['a_1/a_0', 'a_2/a_1', 'a_2/a_0']
+        labels = ['a_2/a_1', 'a_3/a_1', 'a_3/a_2']
+        if log:
+            list_ratios = np.log(list_ratios)
+            labels = ['log('+label+')' for label in labels]
         for i in range(3):
             plt.subplot(1, 3, i + 1)
             plt.plot(list_time, list_ratios[:, i], label=labels[i])

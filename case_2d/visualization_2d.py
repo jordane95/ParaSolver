@@ -43,14 +43,12 @@ def simulation_2d_fill(list_length, list_angle):
     plt.show()
 
 
-def test():
+def test(fill=True):
     from case_2d.numerical_2d import NumericalSolver2D
     num_solver_2d = NumericalSolver2D(s=0.5, w=1, beta=0, list_time=np.linspace(0, 5, 500))
     list_values, list_vectors = num_solver_2d.calc_eig_para()
     list_ratio, list_angle = num_solver_2d.calc_geo_para()
     list_length = np.array([[1/eig_values[0], 1/eig_values[1]] for eig_values in list_values])
-
-    fill = True
     if fill:
         simulation_2d_fill(list_length, list_angle)
     else:

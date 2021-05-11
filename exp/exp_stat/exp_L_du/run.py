@@ -1,28 +1,31 @@
 from exp.exp_stat.experiment import run
 
-### change parameters here
-# number of particles
+######################################################
+############  CUSTOMIZE PARAMETERS HERE  #############
+
+# number of particles to track
 nums = 10
 
-# time_step
+# time_step (i.e. first line of the grad.txt file)
 delta_t = 0.0001
 
-# how many steps (i.e. lines) in the grad file
+# how many steps ( < number lines of grad.txt file)
 steps = 40000
 
 # calculate the deformation parameters or not
-calc_para = False
+calc_para = True
 
 # plot the trajectory in the screen or not
-plot_traj = True
+plot_traj = False
 
 # save the trajectory in the desk "./img/" or not
-save_traj = False
+save_traj = True
 
-# shape
-shape = 'l'
+# shape of the fluid flow, optional: ['l']
+shape = None
 
-### end
+#############           END          ################
+#####################################################
 
 if __name__ == '__main__':
     run(nums=nums, delta_t=delta_t, steps=steps, calc_para=calc_para, plot_traj=plot_traj, save_traj=save_traj, shape=shape)

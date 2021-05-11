@@ -1,25 +1,39 @@
 # Particle Deformation
-Numerical simulation of fluid particle deformation in the flow field
 
-We will explore the deformation of fluid particle in some flow, such as canal, 
-pipe flow(tube rond, tube squre, tube L). And give the statistic law of deformation 
+## Introduction
+Numerical simulation of particle deformation in the fluid flow.
+
+We will explore the deformation of fluid particle in some turblent flow, such as canal, 
+pipe flow(rond, square, L), then analyse the statistic comportment of particle deformation 
 in these situations.
 
-# Functions
+## Structure
+* case_2d: 2d fluid flow validation and simulation
+* case_3d: 3d fluid flow validation and simulation
+* common: implementations of the core function
+    * fileIO
+    * paraSolver
+    * visualization
+    
+* example: some running results
+* exp: where we do experiments using functions implemented in common
+  * exp_sing: study the deformation behavior of a single particle
+  * exp_stat: statical analyses of particle deformation
 
-* ParaSolver
-* StatSolver
-* Visualization
+## Function
+
+* ParaSolver: solve deformation parameters of particle 
+* StatSolver: statistical analyse
+* Visualization: geometric simulation
+
+## Usage
+* open the *exp* folder
+* enter the *exp_sin* folder for single particle tracer, 
+enter the *exp_stat* folder for statistic experiment
 
 ## TODO
 
-* Plot the geometric surface of the fluid flow 
-* Perform experiment on large amount of data
 * Performance optimization
-
-## Usage
-
-* to be continued
 
 ## Reference
 

@@ -4,8 +4,8 @@ import numpy as np
 
 def _plot_ellipse_3d(lengths, trans_mat, ax):
     (a, b, c) = tuple(lengths)
-    theta = np.linspace(0, np.pi, 20)
-    phi = np.linspace(0, 2 * np.pi, 20)
+    theta = np.linspace(0, np.pi, 30)
+    phi = np.linspace(0, 2 * np.pi, 30)
     list_x = a * np.outer(np.sin(theta), np.sin(phi))
     list_y = b * np.outer(np.sin(theta), np.cos(phi))
     list_z = c * np.outer(np.cos(theta), np.ones_like(phi))
@@ -13,7 +13,7 @@ def _plot_ellipse_3d(lengths, trans_mat, ax):
     list_cor_new = np.array([np.dot(trans_mat, cor) for cor in list_cor_old])
     plt.cla()
     # ax.plot_surface(list_cor_new[:, 0], list_cor_new[:, 1], list_cor_new[:, 2], color='b')
-    ax.plot_wireframe(list_cor_new[:, 0], list_cor_new[:, 1], list_cor_new[:, 2], color='r')
+    ax.plot_wireframe(list_cor_new[:, 0], list_cor_new[:, 1], list_cor_new[:, 2], color='b')
     ax.set_xlim(-2, 2)
     ax.set_ylim(-2, 2)
     ax.set_zlim(-2, 2)
@@ -41,23 +41,25 @@ def simulation_3d(list_length, list_vectors):
 
 # plot the trajectory of a particle
 def plot_position(list_position, save_dest=None, delta=None, max_time=None, shape=None):
-    print("Plotting trajectory...")
+    # plot trajectory
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     ax.scatter(list_position[:, 0], list_position[:, 1], list_position[:, 2], c='b', s=0.1)
     ax.set(xlabel='X', ylabel='Y', zlabel='Z')
     points_idx = []
-    time = 0
-    while time <= max_time:
-        points_idx.append(int(time/delta))
-        time += 0.5
-    for idx, i in enumerate(points_idx):
-        ax.scatter(list_position[i, 0], list_position[i, 1], list_position[i, 2], c='r', marker='^', s=10)
-        ax.text(list_position[i, 0], list_position[i, 1], list_position[i, 2], 't='+str(idx*0.5)+"s", c='r', fontsize=7)
-    print('Finished')
-    # plot surface shape
+    # optional: tracer
+    if max_time:
+        time = 0
+        while time <= max_time:
+            points_idx.append(int(time/delta))
+            time += 0.5
+        for idx, i in enumerate(points_idx):
+            ax.scatter(list_position[i, 0], list_position[i, 1], list_position[i, 2], c='r', marker='^', s=10)
+            ax.text(list_position[i, 0], list_position[i, 1], list_position[i, 2], 't='+str(idx*0.5)+"s", c='r', fontsize=7)
+    # optional: plot surface shape
     if shape == 'l':
         plot_l_pipe(ax)
+    # optional: save fig
     if save_dest is not None:
         plt.savefig(save_dest)
     else:

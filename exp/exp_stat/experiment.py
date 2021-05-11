@@ -11,7 +11,7 @@ def run(nums, delta_t, steps, calc_para=False, plot_traj=False, save_traj=False,
         stat_solver.plot_angle_avg()
         stat_solver.plot_coli_avg()
     if plot_traj:
-        stat_solver.plot_trajectory(shape)
+        stat_solver.plot_trajectory(shape=shape)
     if save_traj:
         stat_solver.save_trajectory(shape=shape, save_path=save_path)
 
