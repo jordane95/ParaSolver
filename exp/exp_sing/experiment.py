@@ -15,7 +15,7 @@ def run(plot_traj=True, calc_para=True, simulation=False, max_time=None, shape=N
         # position
         filename = 'Utr.txt'
         delta_t, list_position = get_position(filename)
-        plot_position(list_position, delta=0.0005, max_time=max_time, shape=shape)
+        plot_position(list_position, delta=delta, max_time=max_time, shape=shape)
 
     if simulation:
         # visualization

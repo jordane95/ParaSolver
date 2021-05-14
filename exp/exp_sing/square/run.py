@@ -14,10 +14,10 @@ max_time = None
 calc_para = True
 
 # output the animation ?
-simulation = True
+simulation = False
 
 # shape ?
-shape = None
+shape = False
 
 ###############              END            ##################
 ##############################################################
