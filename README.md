@@ -7,6 +7,14 @@ We will explore the deformation of fluid particle in some turblent flow, such as
 pipe flow(rond, square, L), then analyse the statistic comportment of particle deformation 
 in these situations.
 
+## Visualization
+* Two dimensional deformation
+
+![def2d](example/2d.gif)
+* 3 dimensional deformation
+
+![def3d](example/3d.gif)
+
 ## Structure
 * case_2d: 2d fluid flow validation and simulation
 * case_3d: 3d fluid flow validation and simulation
